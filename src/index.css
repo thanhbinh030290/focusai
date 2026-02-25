@@ -1,0 +1,58 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Space Grotesk", sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+  
+  --color-primary: #9381ff;
+  --color-primary-dark: #7a66ff;
+  --color-primary-light: #b8b0ff;
+  
+  --color-bg-main: #f8f7ff;
+  --color-bg-card: #ffffff;
+  --color-text-main: #2d005d;
+  --color-text-muted: #6b5b95;
+  --color-border-subtle: #e2d9ff;
+}
+
+@layer base {
+  body {
+    @apply bg-bg-main text-text-main font-sans antialiased;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-display font-bold tracking-tight text-text-main;
+  }
+}
+
+.glass {
+  @apply bg-white/80 backdrop-blur-md border border-border-subtle shadow-sm;
+}
+
+.primary-glow {
+  box-shadow: 0 0 20px rgba(147, 129, 255, 0.2);
+}
+
+.primary-glow-strong {
+  box-shadow: 0 0 30px rgba(147, 129, 255, 0.4);
+}
+
+.focus-gradient {
+  background: linear-gradient(135deg, #f8f7ff 0%, #e2d9ff 100%);
+}
+
+.markdown-body {
+  @apply text-text-main leading-relaxed;
+}
+
+.markdown-body p {
+  @apply mb-4;
+}
+
+.markdown-body code {
+  @apply bg-primary/10 px-1 rounded text-primary-dark font-mono text-sm;
+}
+
+

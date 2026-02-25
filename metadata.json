@@ -1,0 +1,7 @@
+{
+  "name": "Remix: FocusAI",
+  "description": "An AI-powered learning companion to help students focus and reduce social media addiction through gamified quizzes.",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}
