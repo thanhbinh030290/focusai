@@ -15,25 +15,23 @@ export default function Auth({ onLogin }: { onLogin: (user: any) => void }) {
     setLoading(true);
     setError('');
 
-    try {
-      const res = await fetch('/api/auth/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password, name }),
-      });
-      const data = await res.json();
-      
-      if (data.user) {
-        localStorage.setItem('nexus_user', JSON.stringify(data.user));
-        onLogin(data.user);
-      } else {
-        setError('Authentication failed');
-      }
-    } catch (err) {
-      setError('Something went wrong');
-    } finally {
+    // Vì Vercel không có backend, mình sẽ tạo một User "VIP" giả 
+    // để bạn vào thẳng Dashboard trải nghiệm nhé!
+    const mockUser = {
+      name: name || "Hà Quang Linh",
+      email: email || "linhhqth08598@gmail.com",
+      level: 1,
+      exp: 100,
+      coins: 50
+    };
+
+    // Giả lập thời gian chờ 0.5 giây cho giống thật
+    setTimeout(() => {
+      localStorage.setItem('nexus_user', JSON.stringify(mockUser));
+      onLogin(mockUser);
       setLoading(false);
-    }
+      // Sau khi gọi onLogin, App.tsx sẽ tự thấy user và đổi trang cho bạn
+    }, 500);
   };
 
   return (
