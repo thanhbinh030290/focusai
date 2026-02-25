@@ -41,13 +41,19 @@ export default function App() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const savedUser = localStorage.getItem('nexus_user');
-    if (savedUser) {
-      setUser(JSON.parse(savedUser));
-    }
+    // Tự động đăng nhập cho Linh để vào thẳng Dashboard
+    const fakeUser = {
+      name: 'Hà Quang Linh',
+      email: 'linhhqth08598@gmail.com',
+      level: 1,
+      exp: 10,
+      coins: 100
+    };
+    
+    localStorage.setItem('nexus_user', JSON.stringify(fakeUser));
+    setUser(fakeUser);
     setLoading(false);
   }, []);
-
   const handleLogout = () => {
     localStorage.removeItem('nexus_user');
     setUser(null);
