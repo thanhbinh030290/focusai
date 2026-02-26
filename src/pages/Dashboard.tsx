@@ -293,7 +293,7 @@ export default function Dashboard({ user, setUser }: { user: any, setUser: (user
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 rounded-full overflow-hidden flex items-center justify-center border border-primary/20">
                       <img 
-                        src="https://lh3.googleusercontent.com/gg/AMW1TPq20fwUh3ggnf-W9BQEdZAK2Obb3XjVMsEEpVdx-Qt6NBcyOlX0fKyhvL6oKpxdO4Ij602JFOSpxZB9HeXlKQOso4OGeT978d3hzh-G4L1w0sOSudGiE2O6FEkWDFFad7hKrCN8SICGMJcYXWmN604Eu8QzVhJcNxm6s0ZtQaPKPnzEVSoYOqDkI6LxL-0lNwJBqNNfTKMKTwr8NwnBwLi1cnSGFstOkFa8JdgGJZoakTXfr5IDqK2wwm9VYowlhxghW5qfZSPDEP05iL8n6FiBjPv02W5TIS_dcJ9kM4uxdQ16daKrBYUkxwV1VLeJv8zRHQIXKwXOlj3JNyZ2dhOS=s1024-rj" 
+                        src="**/**Images/Gemini_Generated_Image_lmzhbclmzhbclmzh.png" 
                         alt="FocusAI Logo"
                         className="w-full h-full object-cover"
                         referrerPolicy="no-referrer"
@@ -318,7 +318,7 @@ export default function Dashboard({ user, setUser }: { user: any, setUser: (user
                     <div className="text-center py-12">
                       <div className="w-16 h-16 mx-auto rounded-2xl overflow-hidden mb-4 opacity-20 grayscale">
                         <img 
-                          src="https://lh3.googleusercontent.com/gg/AMW1TPq20fwUh3ggnf-W9BQEdZAK2Obb3XjVMsEEpVdx-Qt6NBcyOlX0fKyhvL6oKpxdO4Ij602JFOSpxZB9HeXlKQOso4OGeT978d3hzh-G4L1w0sOSudGiE2O6FEkWDFFad7hKrCN8SICGMJcYXWmN604Eu8QzVhJcNxm6s0ZtQaPKPnzEVSoYOqDkI6LxL-0lNwJBqNNfTKMKTwr8NwnBwLi1cnSGFstOkFa8JdgGJZoakTXfr5IDqK2wwm9VYowlhxghW5qfZSPDEP05iL8n6FiBjPv02W5TIS_dcJ9kM4uxdQ16daKrBYUkxwV1VLeJv8zRHQIXKwXOlj3JNyZ2dhOS=s1024-rj" 
+                          src="**/**Images/Gemini_Generated_Image_lmzhbclmzhbclmzh.png" 
                           alt="FocusAI Logo"
                           className="w-full h-full object-cover"
                           referrerPolicy="no-referrer"
