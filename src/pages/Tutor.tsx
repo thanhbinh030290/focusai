@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Send, Bot, User, Sparkles, BookOpen, GraduationCap, Image as ImageIcon, X, Zap } from 'lucide-react';
 import Markdown from 'react-markdown';
 import { getTutorResponse } from '../services/geminiService';
@@ -47,6 +47,7 @@ export default function Tutor({ user }: { user: any }) {
     <div className="h-[calc(100vh-120px)] flex flex-col gap-6">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-6">
+          {/* LOGO GÓC TRÊN - ĐÃ XÓA DẤU SAO */}
           <div className="w-16 h-16 rounded-2xl overflow-hidden border-4 border-violet-100 shadow-xl">
             <img src="/Images/Gemini_Generated_Image_lmzhbclmzhbclmzh.png" alt="FocusAI Robot" className="w-full h-full object-cover" />
           </div>
@@ -65,8 +66,9 @@ export default function Tutor({ user }: { user: any }) {
         <div ref={scrollRef} className="flex-1 overflow-y-auto p-10 space-y-8 scrollbar-hide">
           {messages.length === 0 && (
             <div className="h-full flex flex-col items-center justify-center text-center max-w-lg mx-auto space-y-8 py-12">
-              <div className="w-32 h-32 rounded-[40px] bg-violet-100 flex items-center justify-center shadow-inner animate-float">
-                <img src="/Images/Gemini_Generated_Image_lmzhbclmzhbclmzh.png" alt="Robot" className="w-20 h-20 object-contain drop-shadow-xl" />
+              {/* LOGO GIỮA - ĐÃ THÊM overflow-hidden ĐỂ BO GÓC TRÒN TRỊA */}
+              <div className="w-32 h-32 rounded-[40px] bg-violet-100 flex items-center justify-center shadow-inner overflow-hidden border-4 border-white">
+                <img src="/Images/Gemini_Generated_Image_lmzhbclmzhbclmzh.png" alt="Robot" className="w-full h-full object-cover drop-shadow-xl" />
               </div>
               <h3 className="text-3xl font-black text-text-main">Chào Linh! 👋 Mình đã sẵn sàng.</h3>
               <p className="text-text-muted text-xl font-bold italic leading-relaxed">Gửi câu hỏi hoặc chụp ảnh bài tập cho mình ngay nào!</p>
