@@ -33,47 +33,37 @@ export default function Tutor({ user }: { user: any }) {
   };
 
   const handleSend = async () => {
-    if ((!input.trim() && !imageBase64) || loading) return;
+  if ((!input.trim() && !imageBase64) || loading) return;
 
-    const userMessage: Message = { role: 'user', parts: [{ text: input || "Phân tích ảnh này giúp mình." }] };
-    const aiPlaceholder: Message = { role: 'model', parts: [{ text: '' }] };
-    
-    setMessages(prev => [...prev, userMessage, aiPlaceholder]);
-    
-    const currentInput = input;
-    const currentImage = imageBase64?.split(',')[1];
-    const history = messages;
+  const userMessage: Message = { role: 'user', parts: [{ text: input || "Phân tích ảnh này giúp mình." }] };
+  const aiPlaceholder: Message = { role: 'model', parts: [{ text: '' }] }; // Bong bóng chat rỗng
+  
+  setMessages(prev => [...prev, userMessage, aiPlaceholder]);
+  const currentInput = input;
+  const currentImage = imageBase64?.split(',')[1];
+  const history = messages.slice(-6); // Chỉ lấy 6 tin nhắn cũ để AI nghĩ nhanh hơn
 
-    setInput(''); 
-    setImageBase64(null); 
-    setLoading(true);
+  setInput(''); setImageBase64(null); setLoading(true);
 
-    try {
-      await getTutorStream(currentInput, history, currentImage, (chunk) => {
-        setMessages(prev => {
-          const newMessages = [...prev];
-          const lastMsg = newMessages[newMessages.length - 1];
-          if (lastMsg.role === 'model') {
-            lastMsg.parts[0].text += chunk;
-          }
-          return newMessages;
-        });
-        setLoading(false);
-      });
-    } catch (error) {
-      console.error(error);
+  try {
+    await getTutorStream(currentInput, history, currentImage, (chunk) => {
       setMessages(prev => {
         const newMessages = [...prev];
         const lastMsg = newMessages[newMessages.length - 1];
-        if (lastMsg.role === 'model' && !lastMsg.parts[0].text) {
-          lastMsg.parts[0].text = `Xin lỗi ${firstName}, đang bị lỗi mạng. Thử lại nhé!`;
+        if (lastMsg.role === 'model') {
+          lastMsg.parts[0].text += chunk; // Cộng chữ mới vào
         }
         return newMessages;
       });
-    } finally {
-      setLoading(false);
-    }
-  };
+      setLoading(false); // Tắt loading ngay khi có chữ đầu tiên
+    });
+  } catch (error) {
+    console.error(error);
+    setMessages(prev => [...prev, { role: 'model', parts: [{ text: `Xin lỗi ${firstName}, có lỗi mạng rồi!` }] }]);
+  } finally {
+    setLoading(false);
+  }
+};
 
   return (
     <div className="h-[calc(100vh-120px)] flex flex-col gap-6">
