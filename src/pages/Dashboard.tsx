@@ -293,7 +293,7 @@ export default function Dashboard({ user, setUser }: { user: any, setUser: (user
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 rounded-full overflow-hidden flex items-center justify-center border border-primary/20">
                       <img 
-                        src="**/**Images/Gemini_Generated_Image_lmzhbclmzhbclmzh.png" 
+                        src="/Images/Gemini_Generated_Image_lmzhbclmzhbclmzh.png" 
                         alt="FocusAI Logo"
                         className="w-full h-full object-cover"
                         referrerPolicy="no-referrer"
@@ -318,7 +318,7 @@ export default function Dashboard({ user, setUser }: { user: any, setUser: (user
                     <div className="text-center py-12">
                       <div className="w-16 h-16 mx-auto rounded-2xl overflow-hidden mb-4 opacity-20 grayscale">
                         <img 
-                          src="**/**Images/Gemini_Generated_Image_lmzhbclmzhbclmzh.png" 
+                          src="/Images/Gemini_Generated_Image_lmzhbclmzhbclmzh.png" 
                           alt="FocusAI Logo"
                           className="w-full h-full object-cover"
                           referrerPolicy="no-referrer"
