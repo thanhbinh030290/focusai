@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Flame, Star, Clock, Smile, Frown, Meh, Plus, 
   TrendingDown, BookOpen, Zap, RefreshCw, Sparkles, 
@@ -24,6 +24,9 @@ export default function Dashboard({ user, setUser }: { user: any, setUser: (user
   const [diaryEmotion, setDiaryEmotion] = useState('happy');
   const [editingDiaryId, setEditingDiaryId] = useState<number | null>(null);
   const psychScrollRef = useRef<HTMLDivElement>(null);
+
+  // TRÍCH XUẤT TÊN CUỐI (VD: "Kim Minh Đức" -> "Đức")
+  const firstName = user?.name ? user.name.split(' ').pop() : 'bạn';
 
   useEffect(() => {
     if (psychScrollRef.current) {
@@ -85,7 +88,7 @@ export default function Dashboard({ user, setUser }: { user: any, setUser: (user
       const data = await res.json();
       setPsychHistory(prev => [...prev, { role: 'ai', text: data.text || "Mình luôn ở đây để lắng nghe bạn." }]);
     } catch (e) {
-      setPsychHistory(prev => [...prev, { role: 'ai', text: "Kết nối hơi yếu, Linh thử lại nhé!" }]);
+      setPsychHistory(prev => [...prev, { role: 'ai', text: `Kết nối hơi yếu, ${firstName} thử lại nhé!` }]);
     } finally {
       setLoadingPsych(false);
     }
@@ -123,7 +126,8 @@ export default function Dashboard({ user, setUser }: { user: any, setUser: (user
     <div className="space-y-8">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
         <div>
-          <h1 className="text-3xl md:text-4xl text-text-main font-black mb-2">{user.name} ơi, hôm nay thế nào? 👋</h1>
+          {/* ĐÃ SỬA: Tiêu đề chào mừng */}
+          <h1 className="text-3xl md:text-4xl text-text-main font-black mb-2">{firstName} ơi, hôm nay thế nào? 👋</h1>
           <p className="text-text-muted font-bold italic">FocusAI đồng hành cùng bạn trên con đường tri thức.</p>
         </div>
         <div className="flex gap-4">
@@ -147,7 +151,8 @@ export default function Dashboard({ user, setUser }: { user: any, setUser: (user
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <motion.div whileHover={{ y: -5 }} className="lg:col-span-3 glass p-10 rounded-[45px] relative overflow-hidden bg-gradient-to-br from-white via-white to-violet-50 border-violet-100 shadow-2xl min-h-[350px] flex flex-col justify-center">
           <div className="absolute top-0 right-0 p-12 opacity-5 pointer-events-none"><Sparkles size={160} className="text-violet-600" /></div>
-          <h2 className="text-3xl font-black text-text-main mb-10 text-center tracking-tight">Tâm trạng của Linh hiện tại? ✨</h2>
+          {/* ĐÃ SỬA: Hỏi tâm trạng */}
+          <h2 className="text-3xl font-black text-text-main mb-10 text-center tracking-tight">Tâm trạng của {firstName} hiện tại? ✨</h2>
           <div className="relative flex flex-wrap justify-center items-center gap-6">
             <AnimatePresence mode="popLayout">
               {[
@@ -187,7 +192,8 @@ export default function Dashboard({ user, setUser }: { user: any, setUser: (user
                     <div className="w-14 h-14 rounded-2xl overflow-hidden border-2 border-violet-200 shadow-md">
                       <img src="/Images/Gemini_Generated_Image_lmzhbclmzhbclmzh.png" alt="Logo" className="w-full h-full object-cover" />
                     </div>
-                    <div><h3 className="font-black text-text-main text-xl">Chuyên gia FocusAI</h3><p className="text-[10px] text-violet-400 font-black uppercase tracking-widest">Đang lắng nghe Linh...</p></div>
+                    {/* ĐÃ SỬA: Chữ đang lắng nghe */}
+                    <div><h3 className="font-black text-text-main text-xl">Chuyên gia FocusAI</h3><p className="text-[10px] text-violet-400 font-black uppercase tracking-widest">Đang lắng nghe {firstName}...</p></div>
                   </div>
                   <button onClick={() => setShowPsychChat(false)} className="bg-violet-100 p-2 rounded-full hover:bg-red-500 hover:text-white transition-all"><Plus className="rotate-45" size={28} /></button>
                 </div>
@@ -202,7 +208,8 @@ export default function Dashboard({ user, setUser }: { user: any, setUser: (user
                   )) : (
                     <div className="h-full flex flex-col items-center justify-center text-center space-y-6">
                       <div className="w-24 h-24 rounded-[35px] bg-violet-100 flex items-center justify-center text-violet-600 animate-bounce shadow-inner"><Bot size={48} /></div>
-                      <h4 className="font-black text-2xl text-text-main">Chào Linh, mình đây!</h4>
+                      {/* ĐÃ SỬA: Chào tên */}
+                      <h4 className="font-black text-2xl text-text-main">Chào {firstName}, mình đây!</h4>
                       <p className="text-text-muted font-bold max-w-xs text-lg">Bạn muốn tâm sự về áp lực học tập hay thói quen dùng máy không?</p>
                       <div className="flex flex-col gap-3 w-full max-w-xs">
                         {["Làm sao bớt dùng TikTok?", "Mình thấy lo khi không có điện thoại"].map(txt => (
@@ -214,7 +221,8 @@ export default function Dashboard({ user, setUser }: { user: any, setUser: (user
                   {loadingPsych && <div className="flex gap-2 p-4 bg-violet-50 rounded-2xl w-fit animate-pulse"><span className="w-2 h-2 bg-violet-400 rounded-full animate-bounce"/><span className="w-2 h-2 bg-violet-400 rounded-full animate-bounce [animation-delay:0.2s]"/><span className="w-2 h-2 bg-violet-400 rounded-full animate-bounce [animation-delay:0.4s]"/></div>}
                 </div>
                 <div className="p-6 border-t bg-white flex gap-3">
-                  <input type="text" value={psychMessage} onChange={(e) => setPsychMessage(e.target.value)} placeholder="Nhập lời nhắn của Linh..." className="flex-1 bg-violet-50 border-2 border-violet-100 rounded-2xl px-6 py-4 font-black outline-none focus:border-violet-600 transition-all" onKeyDown={(e) => e.key === 'Enter' && handlePsychChat()} />
+                  {/* ĐÃ SỬA: Placeholder input */}
+                  <input type="text" value={psychMessage} onChange={(e) => setPsychMessage(e.target.value)} placeholder={`Nhập lời nhắn của ${firstName}...`} className="flex-1 bg-violet-50 border-2 border-violet-100 rounded-2xl px-6 py-4 font-black outline-none focus:border-violet-600 transition-all" onKeyDown={(e) => e.key === 'Enter' && handlePsychChat()} />
                   <button onClick={() => handlePsychChat()} className="bg-violet-600 text-white p-4 rounded-2xl shadow-xl hover:scale-105 active:scale-95 transition-all"><Zap size={24} className="fill-white" /></button>
                 </div>
               </motion.div>
@@ -252,7 +260,8 @@ export default function Dashboard({ user, setUser }: { user: any, setUser: (user
                     <h3 className="text-4xl font-serif font-black text-[#5d4037]">{editingDiaryId ? 'Sửa bản thảo' : 'Ghi chép mới'}</h3>
                     <button onClick={() => setShowDiary(false)} className="text-[#5d4037] hover:rotate-90 transition-all duration-300"><Plus className="rotate-45" size={38} /></button>
                   </div>
-                  <textarea value={newDiaryContent} onChange={(e) => setNewDiaryContent(e.target.value)} placeholder="Hôm nay tâm trí Linh đang ở đâu?..." className="flex-1 bg-transparent border-none outline-none text-2xl font-serif font-black text-[#5d4037] resize-none leading-loose placeholder:text-[#d7ccc8]" />
+                  {/* ĐÃ SỬA: Placeholder nhật ký */}
+                  <textarea value={newDiaryContent} onChange={(e) => setNewDiaryContent(e.target.value)} placeholder={`Hôm nay tâm trí ${firstName} đang ở đâu?...`} className="flex-1 bg-transparent border-none outline-none text-2xl font-serif font-black text-[#5d4037] resize-none leading-loose placeholder:text-[#d7ccc8]" />
                   <div className="pt-8 border-t-2 border-[#d7ccc8] flex justify-between items-center">
                     <div className="text-[10px] font-black text-[#8d6e63] uppercase tracking-widest"><p>Màn hình: <span className="text-[#5d4037]">{user.last_screentime || 0}p</span></p><p>Ngày: <span className="text-[#5d4037]">{new Date().toLocaleDateString('vi-VN')}</span></p></div>
                     <button onClick={handleSaveDiary} className="bg-[#5d4037] text-white px-12 py-5 rounded-2xl font-black text-xl hover:bg-[#4e342e] transition-all shadow-2xl active:scale-95">Lưu vào ký ức</button>
