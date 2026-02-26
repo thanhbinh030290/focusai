@@ -94,7 +94,7 @@ function Sidebar({ onLogout, user }: { onLogout: () => void, user: any }) {
   
   const navItems = [
     { icon: LayoutDashboard, label: 'Dashboard', path: '/' },
-    { icon: Clock, label: 'Thời gian sử dụng', path: '/screentime' },
+    { icon: Clock, label: 'Screen Time', path: '/screentime' },
     { icon: MessageSquare, label: 'AI Tutor', path: '/tutor' },
     { icon: BookOpen, label: 'Quizzes', path: '/quiz' },
     { icon: ShoppingBag, label: 'FocusAI Shop', path: '/shop' },
