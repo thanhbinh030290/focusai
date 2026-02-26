@@ -1,18 +1,18 @@
 import { GoogleGenAI, Type } from "@google/genai";
 
 // Linh lưu ý: Ở môi trường Vite/Vercel nên dùng import.meta.env.VITE_GEMINI_KEY 
-// nhưng tôi giữ nguyên process.env theo code gốc của bạn để tránh xung đột
+// để Vercel đọc được chìa khóa bạn đã nhập trong cài đặt.
 const ai = new GoogleGenAI({ apiKey: import.meta.env.VITE_GEMINI_KEY || process.env.GEMINI_API_KEY || "" });
 
-// 1. HÀM STREAMING - GIÚP GIA SƯ NHẢ CHỮ NGAY LẬP TỨC (FIX LỖI BUILD)
+// 1. HÀM STREAMING - GIÚP GIA SƯ NHẢ CHỮ NGAY LẬP TỨC
 export const getTutorStream = async (
   message: string, 
   history: { role: string, parts: { text: string }[] }[], 
   imageBase64: string | undefined,
   onChunk: (chunk: string) => void
 ) => {
-  // Dùng bản Flash để tốc độ phản hồi là nhanh nhất
-  const model = "gemini-1.5-flash"; 
+  // SỬA THÀNH MODEL -LATEST ĐỂ DÙNG GEMINI 3 FLASH MỚI NHẤT
+  const model = "gemini-1.5-flash-latest"; 
   
   const parts: any[] = [{ text: message }];
   if (imageBase64) {
@@ -32,8 +32,13 @@ export const getTutorStream = async (
         { role: "user", parts }
       ],
       config: {
-        // Giữ nguyên chỉ dẫn hệ thống của Linh
-        systemInstruction: `Bạn là FocusAI, một trợ lý học tập thông minh... [giống code gốc của Linh]`,
+        systemInstruction: `Bạn là FocusAI, một trợ lý học tập thông minh, hiện đại và đa năng (tương tự ChatGPT, Claude, Gemini).
+        Nhiệm vụ của bạn là:
+        1. Giúp người dùng "Understand the universe" - giải thích mọi kiến thức.
+        2. Hỗ trợ học sinh Việt Nam giải bài tập qua hình ảnh hoặc văn bản.
+        3. Khuyến khích sự tập trung, giảm thời gian sử dụng mạng xã hội.
+        4. Trả lời một cách chuyên nghiệp nhưng vẫn gần gũi, súc tích.
+        5. Nếu nhận được hình ảnh bài tập, hãy phân tích và hướng dẫn giải chi tiết.`,
       },
     });
 
@@ -48,9 +53,9 @@ export const getTutorStream = async (
   }
 };
 
-// 2. HÀM CŨ CỦA LINH (GIỮ LẠI ĐỂ DỰ PHÒNG)
+// 2. HÀM CŨ ĐỂ DỰ PHÒNG
 export const getTutorResponse = async (message: string, history: any[], imageBase64?: string) => {
-  const model = "gemini-1.5-flash";
+  const model = "gemini-1.5-flash-latest";
   const parts: any[] = [{ text: message }];
   if (imageBase64) {
     parts.push({ inlineData: { mimeType: "image/jpeg", data: imageBase64 } });
@@ -70,9 +75,9 @@ export const getTutorResponse = async (message: string, history: any[], imageBas
   return response;
 };
 
-// 3. HÀM TẠO QUIZ (GIỮ NGUYÊN LOGIC JSON SCHEMA CỦA LINH)
+// 3. HÀM TẠO QUIZ (ĐÃ FIX MODEL -LATEST)
 export const generateQuiz = async (subject: string, grade: string) => {
-  const model = "gemini-1.5-flash";
+  const model = "gemini-1.5-flash-latest";
   
   const response = await ai.models.generateContent({
     model,
