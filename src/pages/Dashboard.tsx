@@ -300,3 +300,98 @@ export default function Dashboard({ user, setUser }: { user: any, setUser: (user
                 <div className="p-6 border-t bg-white">
                   <div className="flex gap-2 bg-bg-main p-2 rounded-2xl border-2 border-border-subtle focus-within:border-primary transition-all">
                     <input type="text" value={psychMessage} onChange={(e) => setPsychMessage(e.target.value)} placeholder="Nhập tâm sự của bạn..." className="flex-1 bg-transparent px-2 py-2 outline-none font-bold" onKeyDown={(e) => e.key === 'Enter' && handlePsychChat()} />
+                    <button onClick={() => handlePsychChat()} disabled={loadingPsych} className="bg-primary text-white p-3 rounded-xl hover:scale-105 active:scale-95 transition-all shadow-lg"><Zap size={20} className="fill-white" /></button>
+                  </div>
+                </div>
+              </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* Diary Section */}
+        <div className="lg:col-span-3">
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-2xl font-black text-text-main flex items-center gap-3"><BookOpen className="text-primary" size={24} /> Nhật ký hành trình</h2>
+            <button onClick={() => openDiaryEditor()} className="bg-primary/10 text-primary px-4 py-2 rounded-xl text-sm font-black flex items-center gap-2 hover:bg-primary hover:text-white transition-all shadow-sm">
+              Viết trang mới <Plus size={18} />
+            </button>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {diaryEntries.length > 0 ? diaryEntries.slice(0, 3).map((entry: any) => (
+              <motion.div key={entry.id} whileHover={{ y: -5 }} onClick={() => openDiaryEditor(entry)}
+                className="glass p-6 rounded-[32px] border-primary/10 space-y-4 cursor-pointer hover:shadow-2xl transition-all bg-white/50"
+              >
+                <div className="flex justify-between items-center">
+                  <span className="text-3xl">{entry.emotion === 'happy' ? '😊' : entry.emotion === 'neutral' ? '😐' : '😟'}</span>
+                  <span className="text-[10px] font-black text-text-muted bg-gray-100 px-2 py-1 rounded-lg">{new Date(entry.timestamp).toLocaleDateString('vi-VN')}</span>
+                </div>
+                <p className="text-sm font-medium text-text-main line-clamp-3 italic leading-relaxed">"{entry.content}"</p>
+                <div className="pt-4 border-t border-primary/5 flex items-center gap-2 text-[10px] font-black text-primary uppercase">
+                  <Clock size={12} /> MXH: {entry.screentime} phút
+                </div>
+              </motion.div>
+            )) : (
+              <div className="col-span-full glass p-12 rounded-[40px] text-center border-dashed border-4 border-primary/10 bg-primary/5">
+                <p className="text-text-muted font-black italic">Trang giấy còn trống... Hãy ghi lại cảm xúc của Linh hôm nay nhé!</p>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Diary Modal - Vintage Wood Style */}
+        <AnimatePresence>
+          {showDiary && (
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+              className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-md"
+            >
+              <motion.div initial={{ scale: 0.8, rotateY: -30 }} animate={{ scale: 1, rotateY: 0 }}
+                className="bg-[#fffcf0] rounded-[40px] w-full max-w-2xl h-[85vh] md:h-[75vh] flex shadow-[0_30px_60px_-15px_rgba(0,0,0,0.5)] overflow-hidden border-[12px] border-[#5d4037]"
+              >
+                <div className="flex-1 p-10 flex flex-col bg-[url('https://www.transparenttextures.com/patterns/paper.png')]">
+                  <div className="flex justify-between items-center mb-8 border-b-4 border-[#5d4037] pb-4">
+                    <h3 className="text-3xl font-serif font-black text-[#5d4037]">
+                      {editingDiaryId ? 'Sửa bản thảo' : 'Ghi chép mới'}
+                    </h3>
+                    <button onClick={() => setShowDiary(false)} className="text-[#5d4037] hover:rotate-90 transition-all duration-300">
+                      <Plus className="rotate-45" size={32} />
+                    </button>
+                  </div>
+                  <div className="flex-1 space-y-8 overflow-y-auto pr-2 scrollbar-hide">
+                    <div className="space-y-3">
+                      <label className="text-[10px] font-black text-[#8d6e63] uppercase tracking-widest">Cảm xúc trong tâm trí</label>
+                      <div className="flex gap-6">
+                        {['happy', 'neutral', 'anxious'].map(e => (
+                          <button key={e} onClick={() => setDiaryEmotion(e)}
+                            className={cn("text-4xl p-3 rounded-2xl transition-all shadow-sm", diaryEmotion === e ? "bg-[#5d4037] scale-110 rotate-3" : "bg-white/50 grayscale opacity-40 hover:opacity-100")}
+                          >
+                            {e === 'happy' ? '😊' : e === 'neutral' ? '😐' : '😟'}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                    <div className="flex-1 flex flex-col space-y-3">
+                      <label className="text-[10px] font-black text-[#8d6e63] uppercase tracking-widest">Dòng suy tư</label>
+                      <textarea value={newDiaryContent} onChange={(e) => setNewDiaryContent(e.target.value)}
+                        placeholder="Hôm nay tâm trí bạn đang ở đâu?..."
+                        className="flex-1 bg-transparent border-none outline-none text-xl font-serif font-bold text-[#5d4037] resize-none placeholder:text-[#d7ccc8] leading-loose"
+                      />
+                    </div>
+                    <div className="pt-6 border-t-2 border-[#d7ccc8] flex justify-between items-center">
+                      <div className="text-[10px] font-black text-[#8d6e63] uppercase space-y-1">
+                        <p>Màn hình: <span className="text-[#5d4037]">{user.last_screentime || 0}p</span></p>
+                        <p>Ngày: <span className="text-[#5d4037]">{new Date().toLocaleDateString('vi-VN')}</span></p>
+                      </div>
+                      <button onClick={handleSaveDiary} className="bg-[#5d4037] text-white px-10 py-4 rounded-2xl font-black text-lg hover:bg-[#4e342e] transition-all shadow-xl active:scale-95">
+                        {editingDiaryId ? 'Cập nhật sổ' : 'Lưu vào ký ức'}
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
+    </div>
+  );
+}
