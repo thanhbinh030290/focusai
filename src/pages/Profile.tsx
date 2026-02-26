@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence } from 'motion/react';
 import { UserCircle, Star, Clock, BookOpen, Trophy, Calendar, CheckCircle2, Flame, Edit2, Camera, Rocket, Search, Users, UserPlus, Plus, MessageCircle, Send, Sparkles, MapPin } from 'lucide-react';
 
 const CHARACTERS = [
