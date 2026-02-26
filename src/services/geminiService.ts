@@ -1,6 +1,6 @@
 import { GoogleGenAI, Type } from "@google/genai";
 
-// ĐÃ SỬA: Khớp chính xác với tên VITE_GEMINI_API_KEY trong ảnh Vercel của Linh
+// ĐÃ SỬA: Dùng import.meta.env để khớp với VITE_GEMINI_API_KEY trên Vercel của Linh
 const ai = new GoogleGenAI({ 
   apiKey: import.meta.env.VITE_GEMINI_API_KEY || "" 
 });
@@ -12,8 +12,8 @@ export const getTutorStream = async (
   imageBase64: string | undefined,
   onChunk: (chunk: string) => void
 ) => {
-  // Sử dụng đúng model Gemini 3 Flash bản ổn định nhất hiện tại
-  const model = "gemini-1.5-flash"; 
+  // GIỮ NGUYÊN MODEL GỐC CỦA LINH
+  const model = "gemini-3-flash-preview";
   
   const parts: any[] = [{ text: message }];
   if (imageBase64) {
@@ -33,14 +33,15 @@ export const getTutorStream = async (
         { role: "user", parts }
       ],
       config: {
-        systemInstruction: `Bạn là FocusAI, trợ lý học tập thông minh của Linh. 
-        Hãy giải bài tập chi tiết và gần gũi nhé!`,
+        // GIỮ NGUYÊN SYSTEM INSTRUCTION GỐC CỦA LINH
+        systemInstruction: `Bạn là FocusAI, một trợ lý học tập thông minh, hiện đại và đa năng (tương tự ChatGPT, Claude, Gemini).
+        Nhiệm vụ của bạn là giải thích kiến thức, hỗ trợ giải bài tập và khuyến khích Linh tập trung học tập.`,
       },
     });
 
+    // Nhả chữ về cho giao diện ngay khi có dữ liệu
     for await (const chunk of result.stream) {
-      // Lưu ý: Thư viện genai bản mới dùng chunk.text
-      const chunkText = chunk.text; 
+      const chunkText = chunk.text; // Dùng .text theo thư viện genai mới
       if (chunkText) onChunk(chunkText);
     }
   } catch (error) {
@@ -49,12 +50,28 @@ export const getTutorStream = async (
   }
 };
 
-// 2. HÀM TẠO QUIZ (Đã đồng bộ Key)
+// 2. HÀM CŨ CỦA LINH (GIỮ LẠI ĐỂ KHÔNG LỖI CÁC TRANG KHÁC)
+export const getTutorResponse = async (message: string, history: any[], imageBase64?: string) => {
+  const model = "gemini-3-flash-preview";
+  const parts: any[] = [{ text: message }];
+  if (imageBase64) {
+    parts.push({ inlineData: { mimeType: "image/jpeg", data: imageBase64 } });
+  }
+  return await ai.models.generateContent({
+    model,
+    contents: [
+      ...history.map(h => ({ role: h.role, parts: h.parts })),
+      { role: "user", parts }
+    ],
+  });
+};
+
+// 3. HÀM TẠO QUIZ (GIỮ NGUYÊN JSON SCHEMA CỦA LINH)
 export const generateQuiz = async (subject: string, grade: string) => {
-  const model = "gemini-1.5-flash";
+  const model = "gemini-3-flash-preview";
   const response = await ai.models.generateContent({
     model,
-    contents: `Tạo 5 câu hỏi trắc nghiệm môn ${subject} lớp ${grade}.`,
+    contents: `Tạo 5 câu hỏi trắc nghiệm về môn ${subject} lớp ${grade}.`,
     config: {
       responseMimeType: "application/json",
       responseSchema: {
