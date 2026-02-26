@@ -1,43 +1,30 @@
-import React, { useState, useEffect } from "react";
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
-  Navigate,
-  Link,
-  useLocation,
-} from "react-router-dom";
-import {
-  LayoutDashboard,
-  MessageSquare,
-  BookOpen,
-  Trophy,
-  User,
-  LogOut,
-  Flame,
-  Star,
-  Settings,
-  Clock,
-  ChevronRight,
-  Menu,
-  X,
+import React, { useState, useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate, Link, useLocation } from 'react-router-dom';
+import { 
+  LayoutDashboard, 
+  MessageSquare, 
+  BookOpen, 
+  Trophy, 
+  User, 
+  LogOut, 
+  Clock, 
   ShoppingBag,
-  UserCircle,
-  Bot,
-} from "lucide-react";
-import { motion, AnimatePresence } from "motion/react";
-import { clsx, type ClassValue } from "clsx";
-import { twMerge } from "tailwind-merge";
+  UserCircle
+} from 'lucide-react';
+import { AnimatePresence } from 'framer-motion';
+import { clsx, type ClassValue } from 'clsx';
+import { twMerge } from 'tailwind-merge';
 
 // Pages
-import Dashboard from "./pages/Dashboard";
-import Tutor from "./pages/Tutor";
-import Quiz from "./pages/Quiz";
-import Achievements from "./pages/Achievements";
-import ParentalView from "./pages/ParentalView";
-import Auth from "./pages/Auth";
-import Shop from "./pages/Shop";
-import Profile from "./pages/Profile";
+import Dashboard from './pages/Dashboard';
+import Tutor from './pages/Tutor';
+import Quiz from './pages/Quiz';
+import Achievements from './pages/Achievements';
+import ParentalView from './pages/ParentalView';
+import Auth from './pages/Auth';
+import Shop from './pages/Shop';
+import Profile from './pages/Profile';
+import ScreenTime from './pages/ScreenTime';
 
 function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -48,7 +35,7 @@ export default function App() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const savedUser = localStorage.getItem("nexus_user");
+    const savedUser = localStorage.getItem('nexus_user');
     if (savedUser) {
       setUser(JSON.parse(savedUser));
     }
@@ -56,20 +43,19 @@ export default function App() {
   }, []);
 
   const handleLogout = () => {
-    localStorage.removeItem("nexus_user");
+    localStorage.removeItem('nexus_user');
     setUser(null);
   };
 
-  if (loading)
-    return (
-      <div className="h-screen w-screen flex items-center justify-center bg-bg-main text-primary">
-        Loading FocusAI...
-      </div>
-    );
+  if (loading) return (
+    <div className="h-screen w-screen flex items-center justify-center bg-bg-main text-primary font-black text-xl">
+      Loading FocusAI...
+    </div>
+  );
 
   return (
     <Router>
-      <div className="min-h-screen bg-bg-main text-text-main selection:bg-primary/30">
+      <div className="min-h-screen bg-bg-main text-text-main selection:bg-primary/30 font-sans">
         <AnimatePresence mode="wait">
           {!user ? (
             <Routes>
@@ -82,31 +68,14 @@ export default function App() {
               <main className="flex-1 overflow-y-auto relative">
                 <div className="p-4 md:p-8 max-w-7xl mx-auto pb-24 md:pb-8">
                   <Routes>
-                    <Route
-                      path="/"
-                      element={<Dashboard user={user} setUser={setUser} />}
-                    />
+                    <Route path="/" element={<Dashboard user={user} setUser={setUser} />} />
+                    <Route path="/screentime" element={<ScreenTime user={user} />} />
                     <Route path="/tutor" element={<Tutor user={user} />} />
-                    <Route
-                      path="/quiz"
-                      element={<Quiz user={user} setUser={setUser} />}
-                    />
-                    <Route
-                      path="/achievements"
-                      element={<Achievements user={user} />}
-                    />
-                    <Route
-                      path="/shop"
-                      element={<Shop user={user} setUser={setUser} />}
-                    />
-                    <Route
-                      path="/profile"
-                      element={<Profile user={user} setUser={setUser} />}
-                    />
-                    <Route
-                      path="/parental"
-                      element={<ParentalView user={user} />}
-                    />
+                    <Route path="/quiz" element={<Quiz user={user} setUser={setUser} />} />
+                    <Route path="/shop" element={<Shop user={user} setUser={setUser} />} />
+                    <Route path="/achievements" element={<Achievements user={user} />} />
+                    <Route path="/profile" element={<Profile user={user} setUser={setUser} />} />
+                    <Route path="/parental" element={<ParentalView user={user} />} />
                     <Route path="*" element={<Navigate to="/" replace />} />
                   </Routes>
                 </div>
@@ -120,33 +89,31 @@ export default function App() {
   );
 }
 
-function Sidebar({ onLogout, user }: { onLogout: () => void; user: any }) {
+function Sidebar({ onLogout, user }: { onLogout: () => void, user: any }) {
   const location = useLocation();
-
+  
   const navItems = [
-    { icon: LayoutDashboard, label: "Dashboard", path: "/" },
-    { icon: Clock, label: "Screen Time", path: "/parental" },
-    { icon: MessageSquare, label: "AI Tutor", path: "/tutor" },
-    { icon: BookOpen, label: "Quizzes", path: "/quiz" },
-    { icon: ShoppingBag, label: "FocusAI Shop", path: "/shop" },
-    { icon: Trophy, label: "Achievements", path: "/achievements" },
-    { icon: UserCircle, label: "Profile", path: "/profile" },
+    { icon: LayoutDashboard, label: 'Dashboard', path: '/' },
+    { icon: Clock, label: 'Thời gian sử dụng', path: '/screentime' },
+    { icon: MessageSquare, label: 'AI Tutor', path: '/tutor' },
+    { icon: BookOpen, label: 'Quizzes', path: '/quiz' },
+    { icon: ShoppingBag, label: 'FocusAI Shop', path: '/shop' },
+    { icon: Trophy, label: 'Achievements', path: '/achievements' },
+    { icon: UserCircle, label: 'Profile', path: '/profile' },
+    { icon: User, label: 'Parental View', path: '/parental' },
   ];
 
   return (
     <aside className="hidden md:flex flex-col w-64 bg-bg-card border-r border-border-subtle p-6">
       <div className="flex items-center gap-3 mb-10 px-2">
-        <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center primary-glow overflow-hidden">
-          <img
-            src="/Images/Gemini_Generated_Image_lmzhbclmzhbclmzh.png"
+        <div className="w-12 h-12 bg-primary rounded-2xl flex items-center justify-center primary-glow overflow-hidden shadow-lg border-2 border-primary/20">
+          <img 
+            src="/Images/Gemini_Generated_Image_lmzhbclmzhbclmzh.png" 
             alt="FocusAI Logo"
             className="w-full h-full object-cover"
-            referrerPolicy="no-referrer"
           />
         </div>
-        <h1 className="text-2xl font-display font-bold text-text-main">
-          FocusAI
-        </h1>
+        <h1 className="text-2xl font-black text-text-main tracking-tighter">FocusAI</h1>
       </div>
 
       <nav className="flex-1 space-y-2">
@@ -155,44 +122,37 @@ function Sidebar({ onLogout, user }: { onLogout: () => void; user: any }) {
             key={item.path}
             to={item.path}
             className={cn(
-              "flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 group",
-              location.pathname === item.path
-                ? "bg-primary/10 text-primary border border-primary/20"
-                : "text-text-muted hover:text-text-main hover:bg-primary/5",
+              "flex items-center gap-3 px-4 py-3.5 rounded-2xl transition-all duration-200 group font-black text-sm",
+              location.pathname === item.path 
+                ? "bg-primary text-white shadow-lg shadow-primary/30" 
+                : "text-text-muted hover:text-primary hover:bg-primary/5"
             )}
           >
-            <item.icon
-              size={20}
-              className={cn(
-                "transition-transform group-hover:scale-110",
-                location.pathname === item.path && "text-primary",
-              )}
-            />
-            <span className="font-medium">{item.label}</span>
+            <item.icon size={20} className={cn(
+              "transition-transform group-hover:scale-110",
+              location.pathname === item.path ? "text-white" : "text-primary"
+            )} />
+            <span>{item.label}</span>
           </Link>
         ))}
       </nav>
 
       <div className="mt-auto pt-6 border-t border-border-subtle">
         <div className="flex items-center gap-3 px-2 mb-6">
-          <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold border border-primary/30">
-            {user.name?.[0]?.toUpperCase() || "U"}
+          <div className="w-10 h-10 rounded-full bg-primary text-white flex items-center justify-center font-black border-2 border-white shadow-md">
+            {user.name?.[0]?.toUpperCase() || 'U'}
           </div>
           <div className="flex-1 overflow-hidden">
-            <p className="text-sm font-semibold text-text-main truncate">
-              {user.name}
-            </p>
-            <p className="text-xs text-text-muted truncate">
-              Level {user.level || 1} Student
-            </p>
+            <p className="text-sm font-black text-text-main truncate">{user.name}</p>
+            <p className="text-[10px] text-text-muted font-bold uppercase tracking-widest">Level {user.level || 1} Student</p>
           </div>
         </div>
-        <button
+        <button 
           onClick={onLogout}
-          className="flex items-center gap-3 px-4 py-3 w-full rounded-xl text-text-muted hover:text-red-500 hover:bg-red-500/10 transition-all"
+          className="flex items-center gap-3 px-4 py-3 w-full rounded-2xl text-text-muted hover:text-red-500 hover:bg-red-500/10 transition-all font-black text-sm"
         >
           <LogOut size={20} />
-          <span className="font-medium">Logout</span>
+          <span>Logout</span>
         </button>
       </div>
     </aside>
@@ -202,24 +162,22 @@ function Sidebar({ onLogout, user }: { onLogout: () => void; user: any }) {
 function MobileNav() {
   const location = useLocation();
   const navItems = [
-    { icon: LayoutDashboard, path: "/" },
-    { icon: MessageSquare, path: "/tutor" },
-    { icon: BookOpen, path: "/quiz" },
-    { icon: ShoppingBag, path: "/shop" },
-    { icon: UserCircle, path: "/profile" },
+    { icon: LayoutDashboard, path: '/' },
+    { icon: Clock, path: '/screentime' },
+    { icon: MessageSquare, path: '/tutor' },
+    { icon: BookOpen, path: '/quiz' },
+    { icon: UserCircle, path: '/profile' },
   ];
 
   return (
-    <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-bg-card/80 backdrop-blur-lg border-t border-border-subtle px-6 py-3 flex justify-between items-center z-50">
+    <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-bg-card/90 backdrop-blur-xl border-t border-border-subtle px-6 py-4 flex justify-between items-center z-50">
       {navItems.map((item) => (
         <Link
           key={item.path}
           to={item.path}
           className={cn(
-            "p-2 rounded-xl transition-all",
-            location.pathname === item.path
-              ? "text-primary bg-primary/10"
-              : "text-text-muted",
+            "p-3 rounded-2xl transition-all",
+            location.pathname === item.path ? "text-primary bg-primary/10 shadow-inner" : "text-text-muted"
           )}
         >
           <item.icon size={24} />
