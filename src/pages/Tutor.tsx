@@ -17,8 +17,8 @@ export default function Tutor({ user }: { user: any }) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // LOGIC TRÍCH XUẤT TÊN NGƯỜI DÙNG: Lấy từ cuối cùng của full name
-  const firstName = user?.name ? user.name.split(' ').pop() : 'bạn';
+  // --- LOGIC TRÍCH XUẤT TÊN NGƯỜI DÙNG ---
+  const firstName = user?.name ? user.name.split(' ').pop() : 'Linh';
 
   useEffect(() => {
     if (scrollRef.current) {
@@ -30,7 +30,9 @@ export default function Tutor({ user }: { user: any }) {
     const file = e.target.files?.[0];
     if (file) {
       const reader = new FileReader();
-      reader.onloadend = () => setImageBase64(reader.result as string);
+      reader.onloadend = () => {
+        setImageBase64(reader.result as string);
+      };
       reader.readAsDataURL(file);
     }
   };
@@ -67,90 +69,102 @@ export default function Tutor({ user }: { user: any }) {
 
   return (
     <div className="h-[calc(100vh-120px)] flex flex-col gap-6">
-      {/* Header Section */}
-      <div className="flex flex-col md:flex-row items-center justify-between gap-6">
-        <div className="flex items-center gap-6">
-          <div className="w-24 h-24 rounded-3xl bg-gradient-to-br from-primary to-purple-600 p-1 shadow-2xl overflow-hidden">
-            <img src="https://images.unsplash.com/photo-1546776310-eef45dd6d63c?w=400&h=400&fit=crop" alt="Robot" className="w-full h-full object-cover rounded-[22px]" />
-          </div>
-          <div>
-            <h1 className="text-4xl font-black text-text-main tracking-tight flex items-center gap-3">Gia sư FocusAI <Sparkles className="text-yellow-500 animate-bounce" size={24} /></h1>
-            <p className="text-text-muted font-bold italic text-lg">Học tập thông minh hơn cùng AI, {firstName} nhé!</p>
-          </div>
-        </div>
-        <div className="glass px-5 py-2.5 rounded-2xl border-primary/20 bg-primary/5 flex items-center gap-3 shadow-sm">
-          <GraduationCap className="text-primary" size={24} />
-          <span className="text-sm font-black text-primary uppercase">Chuyên gia học tập</span>
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-4xl font-black text-text-main flex items-center gap-3">
+            <Bot className="text-primary" size={40} />
+            Gia sư FocusAI
+          </h1>
+          <p className="text-text-muted font-bold italic">Học tập thông minh hơn cùng AI, {firstName} nhé!</p>
         </div>
       </div>
 
-      {/* Main Chat Area */}
-      <div className="flex-1 glass rounded-[40px] overflow-hidden flex flex-col relative border-primary/10 shadow-2xl bg-white/40 backdrop-blur-xl">
-        <div ref={scrollRef} className="flex-1 overflow-y-auto p-10 space-y-8 scrollbar-hide">
+      <div className="flex-1 glass rounded-[40px] overflow-hidden flex flex-col relative border-primary/10 shadow-2xl">
+        <div 
+          ref={scrollRef}
+          className="flex-1 overflow-y-auto p-10 space-y-8 scrollbar-hide"
+        >
           {messages.length === 0 && (
-            <div className="h-full flex flex-col items-center justify-center text-center max-w-lg mx-auto space-y-8 py-12">
-              <div className="w-32 h-32 rounded-[40px] bg-primary/10 flex items-center justify-center shadow-inner overflow-hidden border-4 border-white">
-                <img src="https://images.unsplash.com/photo-1546776310-eef45dd6d63c?w=400&h=400&fit=crop" alt="Robot" className="w-full h-full object-contain drop-shadow-xl" />
+            <div className="h-full flex flex-col items-center justify-center text-center max-w-md mx-auto space-y-8">
+              <div className="w-24 h-24 rounded-[35px] bg-primary/10 flex items-center justify-center primary-glow">
+                <Bot className="text-primary" size={48} />
               </div>
-              <h3 className="text-3xl font-black text-text-main">Chào {firstName}! 👋 Mình đã sẵn sàng.</h3>
-              <p className="text-text-muted text-xl font-bold italic leading-relaxed">Gửi câu hỏi hoặc chụp ảnh bài tập cho mình ngay nào!</p>
-              
-              <div className="grid grid-cols-2 gap-6 w-full pt-6">
-                <div onClick={() => setInput("Giải bài tập này giúp mình...")} className="p-6 bg-white/60 rounded-3xl border-2 border-primary/10 text-left hover:border-primary/30 transition-all cursor-pointer group shadow-sm">
-                  <BookOpen className="text-primary mb-3 group-hover:scale-110 transition-transform" size={32} />
-                  <p className="font-black text-text-main">Giải bài tập</p>
-                </div>
-                <div onClick={() => setInput("Tóm tắt kiến thức phần...")} className="p-6 bg-white/60 rounded-3xl border-2 border-primary/10 text-left hover:border-primary/30 transition-all cursor-pointer group shadow-sm">
-                  <Zap className="text-yellow-500 mb-3 group-hover:scale-110 transition-transform" size={32} />
-                  <p className="font-black text-text-main">Tóm tắt kiến thức</p>
-                </div>
+              <div>
+                <h3 className="text-3xl font-black text-text-main mb-2">Chào {firstName}! 👋</h3>
+                <p className="text-text-muted text-lg">Mình đã sẵn sàng. Gửi câu hỏi hoặc tải ảnh bài tập cho mình ngay nào!</p>
               </div>
             </div>
           )}
 
           {messages.map((msg, idx) => (
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} key={idx} className={`flex gap-5 ${msg.role === 'user' ? 'flex-row-reverse' : ''}`}>
-              <div className={`w-12 h-12 rounded-2xl flex-shrink-0 flex items-center justify-center overflow-hidden shadow-lg ${msg.role === 'user' ? 'bg-primary' : 'bg-white border-2 border-primary/20'}`}>
-                {msg.role === 'user' ? <User size={24} className="text-white" /> : <img src="https://images.unsplash.com/photo-1546776310-eef45dd6d63c?w=400&h=400&fit=crop" className="w-full h-full object-cover" />}
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              key={idx} 
+              className={`flex gap-5 ${msg.role === 'user' ? 'flex-row-reverse' : ''}`}
+            >
+              <div className={`w-12 h-12 rounded-2xl flex-shrink-0 flex items-center justify-center overflow-hidden shadow-lg ${
+                msg.role === 'user' ? 'bg-primary' : 'bg-bg-card border-2 border-primary/30'
+              }`}>
+                {msg.role === 'user' ? (
+                  <User size={24} className="text-white" />
+                ) : (
+                  <Bot size={24} className="text-primary" />
+                )}
               </div>
-              <div className={`max-w-[85%] p-6 rounded-[35px] shadow-md relative ${msg.role === 'user' ? 'bg-primary text-white rounded-tr-none font-bold' : 'bg-white text-text-main border border-primary/10 rounded-tl-none font-bold'}`}>
-                <div className="markdown-body"><Markdown>{msg.parts[0].text}</Markdown></div>
+              <div className={`max-w-[85%] p-6 rounded-[35px] shadow-md ${
+                msg.role === 'user' 
+                  ? 'bg-primary/10 text-text-main border border-primary/20 rounded-tr-none' 
+                  : 'bg-white text-text-main border border-border-subtle rounded-tl-none font-bold'
+              }`}>
+                <div className="markdown-body">
+                  <Markdown>{msg.parts[0].text}</Markdown>
+                </div>
               </div>
             </motion.div>
           ))}
-          
-          {loading && (
-            <div className="flex gap-5 animate-pulse">
-              <div className="w-12 h-12 rounded-2xl bg-white border-2 border-primary/20" />
-              <div className="bg-white/60 p-6 rounded-[35px] rounded-tl-none border-2 border-primary/10 flex gap-2">
-                <div className="w-2 h-2 bg-primary/40 rounded-full animate-bounce" />
-                <div className="w-2 h-2 bg-primary/40 rounded-full animate-bounce [animation-delay:0.2s]" />
-                <div className="w-2 h-2 bg-primary/40 rounded-full animate-bounce [animation-delay:0.4s]" />
-              </div>
-            </div>
-          )}
+          {loading && <div className="text-primary font-bold animate-pulse px-4 italic">FocusAI đang suy nghĩ...</div>}
         </div>
 
-        {/* Bottom Input Section */}
-        <div className="p-8 bg-white/80 border-t border-primary/10 backdrop-blur-md">
+        <div className="p-8 bg-bg-card/80 border-t border-border-subtle backdrop-blur-md">
           {imageBase64 && (
             <div className="mb-4 relative inline-block">
-              <img src={imageBase64} className="h-24 w-24 object-cover rounded-2xl border-4 border-primary/20" />
-              <button onClick={() => setImageBase64(null)} className="absolute -top-3 -right-3 bg-red-500 text-white rounded-full p-2 shadow-xl hover:scale-110 transition-all"><X size={16} /></button>
+              <img src={imageBase64} alt="Preview" className="h-24 w-24 object-cover rounded-2xl border-4 border-primary" />
+              <button 
+                onClick={() => setImageBase64(null)}
+                className="absolute -top-3 -right-3 bg-red-500 text-white rounded-full p-2 shadow-xl"
+              >
+                <X size={16} />
+              </button>
             </div>
           )}
           <div className="relative flex items-center gap-3 bg-bg-main p-2 rounded-[30px] border-2 border-border-subtle focus-within:border-primary transition-all shadow-inner">
-            <input type="file" ref={fileInputRef} onChange={handleFileChange} accept="image/*" className="hidden" />
-            <button onClick={() => fileInputRef.current?.click()} className="p-4 text-text-muted hover:text-primary hover:bg-white rounded-2xl transition-all shadow-sm"><ImageIcon size={28} /></button>
-            <textarea 
-              rows={1} 
-              value={input} 
-              onChange={(e) => setInput(e.target.value)} 
-              onKeyDown={(e) => e.key === 'Enter' && !e.shiftKey && (e.preventDefault(), handleSend())} 
-              placeholder={`Hỏi ${firstName} về bài tập nhé...`} 
-              className="flex-1 bg-transparent py-4 pl-4 pr-16 font-black text-lg outline-none resize-none placeholder:text-text-muted/50" 
+            <input 
+              type="file" 
+              ref={fileInputRef} 
+              onChange={handleFileChange} 
+              accept="image/*" 
+              className="hidden" 
             />
-            <button onClick={handleSend} disabled={loading || (!input.trim() && !imageBase64)} className="absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 bg-primary hover:bg-primary-dark disabled:opacity-50 rounded-2xl flex items-center justify-center transition-all shadow-xl active:scale-95">
+            <button 
+              onClick={() => fileInputRef.current?.click()}
+              className="p-4 text-text-muted hover:text-primary hover:bg-white rounded-2xl transition-all shadow-sm"
+            >
+              <ImageIcon size={28} />
+            </button>
+            <textarea 
+              rows={1}
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              onKeyDown={(e) => e.key === 'Enter' && !e.shiftKey && (e.preventDefault(), handleSend())}
+              placeholder={`Hỏi ${firstName} về bài tập nhé...`}
+              className="flex-1 bg-transparent py-4 pl-4 pr-16 font-black text-lg outline-none resize-none"
+            />
+            <button 
+              onClick={handleSend}
+              disabled={loading || (!input.trim() && !imageBase64)}
+              className="absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 bg-primary hover:bg-primary-dark disabled:opacity-50 rounded-2xl flex items-center justify-center transition-all shadow-xl active:scale-95"
+            >
               <Send size={24} className="text-white" />
             </button>
           </div>
