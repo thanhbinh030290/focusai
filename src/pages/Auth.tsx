@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
-import { motion } from 'framer-motion';
+import { motion } from 'motion/react';
 import { Star, Mail, Lock, User, ArrowRight } from 'lucide-react';
-import { supabase } from '../supabase';
-import { useNavigate } from 'react-router-dom';
 
 export default function Auth({ onLogin }: { onLogin: (user: any) => void }) {
   const [isLogin, setIsLogin] = useState(true);
@@ -11,7 +9,6 @@ export default function Auth({ onLogin }: { onLogin: (user: any) => void }) {
   const [name, setName] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -19,50 +16,21 @@ export default function Auth({ onLogin }: { onLogin: (user: any) => void }) {
     setError('');
 
     try {
-      if (!isLogin) {
-        // --- LOGIC ĐĂNG KÝ: LƯU VÀO DATABASE SUPABASE ---
-        const { data, error: regError } = await supabase
-          .from('users')
-          .insert([{ 
-            email, 
-            password, 
-            name,
-            level: 1,
-            exp: 0,
-            coins: 0
-          }])
-          .select()
-          .single();
-
-        if (regError) {
-          if (regError.code === '23505') {
-            throw new Error('Email này đã được đăng ký rồi Linh ơi!');
-          }
-          throw regError;
-        }
-
-        alert("Đăng ký thành công! Giờ hãy đăng nhập nhé.");
-        setIsLogin(true);
+      const res = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password, name }),
+      });
+      const data = await res.json();
+      
+      if (data.user) {
+        localStorage.setItem('nexus_user', JSON.stringify(data.user));
+        onLogin(data.user);
       } else {
-        // --- LOGIC ĐĂNG NHẬP: KIỂM TRA TRÊN DATABASE ---
-        const { data, error: loginError } = await supabase
-          .from('users')
-          .select('*')
-          .eq('email', email)
-          .eq('password', password)
-          .single();
-
-        if (loginError || !data) {
-          setError('Sai email hoặc mật khẩu rồi bạn ơi!');
-        } else {
-          // Lưu vào localStorage để duy trì phiên đăng nhập
-          localStorage.setItem('nexus_user', JSON.stringify(data));
-          onLogin(data);
-          navigate('/');
-        }
+        setError('Authentication failed');
       }
-    } catch (err: any) {
-      setError(err.message || 'Có lỗi xảy ra, thử lại nhé!');
+    } catch (err) {
+      setError('Something went wrong');
     } finally {
       setLoading(false);
     }
@@ -81,7 +49,7 @@ export default function Auth({ onLogin }: { onLogin: (user: any) => void }) {
           </div>
           <h1 className="text-3xl font-display font-bold text-white">NEXUS</h1>
           <p className="text-gray-400 text-center mt-2">
-            {isLogin ? 'Chào mừng Học giả quay trở lại' : 'Bắt đầu hành trình rèn luyện sự tập trung'}
+            {isLogin ? 'Welcome back, Scholar' : 'Begin your journey to focus'}
           </p>
         </div>
 
@@ -91,8 +59,8 @@ export default function Auth({ onLogin }: { onLogin: (user: any) => void }) {
               <User className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500" size={20} />
               <input 
                 type="text" 
-                placeholder="Họ và tên"
-                className="w-full bg-white/5 border border-white/10 rounded-xl py-3 pl-12 pr-4 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 outline-none transition-all text-white"
+                placeholder="Full Name"
+                className="w-full bg-white/5 border border-white/10 rounded-xl py-3 pl-12 pr-4 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 outline-none transition-all"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 required={!isLogin}
@@ -104,8 +72,8 @@ export default function Auth({ onLogin }: { onLogin: (user: any) => void }) {
             <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500" size={20} />
             <input 
               type="email" 
-              placeholder="Địa chỉ Email"
-              className="w-full bg-white/5 border border-white/10 rounded-xl py-3 pl-12 pr-4 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 outline-none transition-all text-white"
+              placeholder="Email Address"
+              className="w-full bg-white/5 border border-white/10 rounded-xl py-3 pl-12 pr-4 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 outline-none transition-all"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
@@ -116,22 +84,22 @@ export default function Auth({ onLogin }: { onLogin: (user: any) => void }) {
             <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500" size={20} />
             <input 
               type="password" 
-              placeholder="Mật khẩu"
-              className="w-full bg-white/5 border border-white/10 rounded-xl py-3 pl-12 pr-4 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 outline-none transition-all text-white"
+              placeholder="Password"
+              className="w-full bg-white/5 border border-white/10 rounded-xl py-3 pl-12 pr-4 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 outline-none transition-all"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
             />
           </div>
 
-          {error && <p className="text-red-400 text-sm text-center font-medium">{error}</p>}
+          {error && <p className="text-red-400 text-sm">{error}</p>}
 
           <button 
             type="submit" 
             disabled={loading}
-            className="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-3 rounded-xl transition-all flex items-center justify-center gap-2 group disabled:opacity-50"
+            className="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-3 rounded-xl transition-all flex items-center justify-center gap-2 group"
           >
-            {loading ? 'Đang xử lý...' : (isLogin ? 'Đăng nhập' : 'Tạo tài khoản')}
+            {loading ? 'Processing...' : (isLogin ? 'Login' : 'Create Account')}
             <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
           </button>
         </form>
@@ -141,7 +109,7 @@ export default function Auth({ onLogin }: { onLogin: (user: any) => void }) {
             onClick={() => setIsLogin(!isLogin)}
             className="text-gray-400 hover:text-emerald-400 text-sm transition-colors"
           >
-            {isLogin ? "Bạn chưa có tài khoản? Đăng ký ngay" : "Đã có tài khoản rồi? Đăng nhập"}
+            {isLogin ? "Don't have an account? Sign up" : "Already have an account? Login"}
           </button>
         </div>
       </motion.div>

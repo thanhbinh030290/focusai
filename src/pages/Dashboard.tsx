@@ -169,12 +169,12 @@ export default function Dashboard({ user, setUser }: { user: any, setUser: (user
       </div>
 
       {/* Main Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <div className="grid grid-cols-1 gap-8">
         
         {/* Daily Check-in */}
         <motion.div 
           whileHover={{ y: -5 }}
-          className="lg:col-span-2 glass p-8 rounded-3xl relative overflow-hidden group min-h-[250px] flex flex-col justify-center"
+          className="glass p-8 rounded-3xl relative overflow-hidden group min-h-[250px] flex flex-col justify-center"
         >
           <div className="absolute top-0 right-0 p-8 opacity-5 group-hover:opacity-10 transition-opacity">
             <Smile size={120} className="text-primary" />
@@ -275,43 +275,6 @@ export default function Dashboard({ user, setUser }: { user: any, setUser: (user
           )}
         </motion.div>
 
-        {/* Screen Time Auto-Extract */}
-        <motion.div 
-          whileHover={{ y: -5 }}
-          className="glass p-8 rounded-3xl border-primary/10"
-        >
-          <div className="flex items-center gap-3 mb-6">
-            <Clock className="text-primary" size={24} />
-            <h2 className="text-xl text-text-main">Thời gian sử dụng</h2>
-          </div>
-          <p className="text-sm text-text-muted mb-6">Tự động trích xuất thời gian sử dụng mạng xã hội từ hệ thống.</p>
-          
-          <div className="space-y-4">
-            <button 
-              onClick={handleAutoExtract}
-              disabled={extracting}
-              className="w-full bg-primary hover:bg-primary-dark text-white font-bold py-4 rounded-xl transition-all flex items-center justify-center gap-2 primary-glow"
-            >
-              {extracting ? <RefreshCw className="animate-spin" size={20} /> : <Zap size={20} />}
-              {extracting ? 'Đang trích xuất...' : 'Trích xuất tự động'}
-            </button>
-          </div>
-
-          <div className="mt-8 p-4 bg-primary/5 rounded-2xl border border-primary/10">
-            <div className="flex items-center gap-2 text-primary mb-2">
-              <TrendingDown size={18} />
-              <span className="text-sm font-bold uppercase">Gợi ý</span>
-            </div>
-            <p className="text-xs text-text-muted mb-3">Hệ thống sẽ phân tích thời gian dùng mạng xã hội, chơi game của bạn để đưa ra lời khuyên.</p>
-            <button 
-              onClick={() => setShowPsychChat(true)}
-              className="text-xs font-bold text-primary flex items-center gap-1 hover:underline"
-            >
-              Trò chuyện với chuyên gia tâm lý <ChevronRight size={14} />
-            </button>
-          </div>
-        </motion.div>
-
         {/* Psychology AI Chat Modal */}
         <AnimatePresence>
           {showPsychChat && (
@@ -392,7 +355,7 @@ export default function Dashboard({ user, setUser }: { user: any, setUser: (user
 
 
         {/* Diary Section */}
-        <div className="lg:col-span-3">
+        <div>
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-xl text-text-main flex items-center gap-2">
               <BookOpen className="text-primary" size={20} />
