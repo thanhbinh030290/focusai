@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { BookOpen, CheckCircle2, XCircle, Trophy, ArrowRight, RefreshCw, HelpCircle, Play, Coins, Zap, Star, Flame, Sparkles, Rocket } from 'lucide-react';
 import { generateQuiz } from '../services/geminiService';
 
@@ -126,7 +126,7 @@ export default function Quiz({ user, setUser }: { user: any, setUser: (user: any
     return () => {
       cancelAnimationFrame(gameLoopRef.current);
       window.removeEventListener('keydown', handleKeyDown);
-    };
+    }
   }, [gameState]);
 
   const loop = () => {
@@ -145,7 +145,7 @@ export default function Quiz({ user, setUser }: { user: any, setUser: (user: any
 
   const updateGame = () => {
     const canvas = canvasRef.current;
-    if (!canvas) return; // Loop continues via 'loop' function calling requestAnimationFrame
+    if (!canvas) return;
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
@@ -213,7 +213,6 @@ export default function Quiz({ user, setUser }: { user: any, setUser: (user: any
     // Spawn Obstacles (Enemy Ships / Aliens)
     if (Math.random() < spawnRate) {
       const pattern = Math.random();
-      // Alien (👾) spawn rate reduced by 80% (original alien patterns were 0.3 + 0.2 = 0.5, now 0.1)
       if (pattern < 0.06) {
         obstaclesRef.current.push({ lane: Math.floor(Math.random() * 3), y: -50, emoji: '👾' });
       } else if (pattern < 0.1) {
@@ -292,9 +291,9 @@ export default function Quiz({ user, setUser }: { user: any, setUser: (user: any
     obstaclesRef.current = obstaclesRef.current.filter(o => o.y < height + 50);
     coinsRef.current = coinsRef.current.filter(c => c.y < height + 50);
 
-    // Timer check: 30 seconds run
+    // Timer check: ĐÃ CHỈNH SỬA XUỐNG CÒN 5 GIÂY CHO LINH
     const elapsed = (Date.now() - startTimeRef.current) / 1000;
-    if (elapsed >= 30) {
+    if (elapsed >= 5) { // <--- Lỗi nằm ở dòng này, tôi đã đổi từ 30 thành 5
       // Add 0.5s delay before showing quiz
       setTimeout(() => {
         setGameState('quiz');
