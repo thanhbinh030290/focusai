@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Mail, Lock, User, ArrowRight } from 'lucide-react';
+import { Mail, Lock, User, ArrowRight, Eye, EyeOff } from 'lucide-react';
 import { supabase } from '../supabase';
 import { useNavigate } from 'react-router-dom';
 
 export default function Auth({ onLogin }: { onLogin: (user: any) => void }) {
   const [isLogin, setIsLogin] = useState(true);
+  const [showPassword, setShowPassword] = useState(false); // Thêm state cho con mắt
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
@@ -72,8 +73,6 @@ export default function Auth({ onLogin }: { onLogin: (user: any) => void }) {
             />
           </div>
           
-          {/* ĐÃ BỎ CHỮ NEXUS THEO Ý BẠN */}
-          
           {/* 2. CHỮ ĐẬM LÊN (font-black) */}
           <p className="text-violet-600 font-black text-2xl text-center">
             {isLogin ? 'Chào mừng Học giả quay lại' : 'Bắt đầu hành trình tập trung'}
@@ -107,16 +106,24 @@ export default function Auth({ onLogin }: { onLogin: (user: any) => void }) {
             />
           </div>
 
-          <div className="relative">
-            <Lock className="absolute left-5 top-1/2 -translate-y-1/2 text-violet-500" size={24} />
+          <div className="relative flex items-center">
+            <Lock className="absolute left-5 text-violet-500" size={24} />
             <input 
-              type="password" 
+              type={showPassword ? 'text' : 'password'} // Điều khiển hiện/ẩn pass
               placeholder="Mật khẩu"
-              className="w-full bg-violet-50 border-2 border-violet-100 rounded-2xl py-5 pl-14 pr-5 focus:border-violet-600 focus:bg-white outline-none transition-all text-violet-950 font-black placeholder:text-violet-300"
+              className="w-full bg-violet-50 border-2 border-violet-100 rounded-2xl py-5 pl-14 pr-14 focus:border-violet-600 focus:bg-white outline-none transition-all text-violet-950 font-black placeholder:text-violet-300"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
             />
+            {/* Nút bấm con mắt */}
+            <button 
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              className="absolute right-5 text-violet-400 hover:text-violet-700 transition-colors"
+            >
+              {showPassword ? <EyeOff size={24} /> : <Eye size={24} />}
+            </button>
           </div>
 
           {error && (
@@ -137,7 +144,10 @@ export default function Auth({ onLogin }: { onLogin: (user: any) => void }) {
 
         <div className="mt-12 text-center">
           <button 
-            onClick={() => setIsLogin(!isLogin)}
+            onClick={() => {
+              setIsLogin(!isLogin);
+              setShowPassword(false); // Tắt mật khẩu khi chuyển form
+            }}
             /* 3. ĐÃ BỎ GẠCH CHÂN (Remove underline/border-b) */
             className="text-violet-400 hover:text-violet-900 text-base font-black transition-all uppercase tracking-widest"
           >
