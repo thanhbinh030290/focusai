@@ -55,7 +55,6 @@ export default function Auth({ onLogin }: { onLogin: (user: any) => void }) {
         if (loginError || !data) {
           setError('Sai email hoặc mật khẩu rồi bạn ơi!');
         } else {
-          // Lưu vào localStorage để duy trì phiên đăng nhập
           localStorage.setItem('nexus_user', JSON.stringify(data));
           onLogin(data);
           navigate('/');
@@ -73,26 +72,27 @@ export default function Auth({ onLogin }: { onLogin: (user: any) => void }) {
       <motion.div 
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="w-full max-w-md glass p-8 rounded-3xl emerald-glow"
+        className="w-full max-w-md glass p-8 rounded-3xl violet-glow"
       >
         <div className="flex flex-col items-center mb-8">
-          <div className="w-16 h-16 bg-emerald-500 rounded-2xl flex items-center justify-center mb-4 emerald-glow-strong">
+          <div className="w-16 h-16 bg-violet-600 rounded-2xl flex items-center justify-center mb-4 violet-glow-strong">
+            {/* Linh có thể thay Star bằng thẻ img logo nếu muốn */}
             <Star className="text-white fill-white" size={32} />
           </div>
-          <h1 className="text-3xl font-display font-bold text-white">NEXUS</h1>
-          <p className="text-gray-400 text-center mt-2">
+          <h1 className="text-3xl font-display font-bold text-white tracking-wider">NEXUS</h1>
+          <p className="text-violet-200/60 text-center mt-2 font-medium">
             {isLogin ? 'Chào mừng Học giả quay trở lại' : 'Bắt đầu hành trình rèn luyện sự tập trung'}
           </p>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-5">
           {!isLogin && (
-            <div className="relative">
-              <User className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500" size={20} />
+            <div className="relative group">
+              <User className="absolute left-4 top-1/2 -translate-y-1/2 text-violet-400/50 group-focus-within:text-violet-400 transition-colors" size={20} />
               <input 
                 type="text" 
                 placeholder="Họ và tên"
-                className="w-full bg-white/5 border border-white/10 rounded-xl py-3 pl-12 pr-4 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 outline-none transition-all text-white"
+                className="w-full bg-white/5 border border-white/10 rounded-xl py-3 pl-12 pr-4 focus:border-violet-500 focus:ring-1 focus:ring-violet-500 outline-none transition-all text-white placeholder:text-white/20"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 required={!isLogin}
@@ -100,36 +100,44 @@ export default function Auth({ onLogin }: { onLogin: (user: any) => void }) {
             </div>
           )}
           
-          <div className="relative">
-            <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500" size={20} />
+          <div className="relative group">
+            <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-violet-400/50 group-focus-within:text-violet-400 transition-colors" size={20} />
             <input 
               type="email" 
               placeholder="Địa chỉ Email"
-              className="w-full bg-white/5 border border-white/10 rounded-xl py-3 pl-12 pr-4 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 outline-none transition-all text-white"
+              className="w-full bg-white/5 border border-white/10 rounded-xl py-3 pl-12 pr-4 focus:border-violet-500 focus:ring-1 focus:ring-violet-500 outline-none transition-all text-white placeholder:text-white/20"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
             />
           </div>
 
-          <div className="relative">
-            <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500" size={20} />
+          <div className="relative group">
+            <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-violet-400/50 group-focus-within:text-violet-400 transition-colors" size={20} />
             <input 
               type="password" 
               placeholder="Mật khẩu"
-              className="w-full bg-white/5 border border-white/10 rounded-xl py-3 pl-12 pr-4 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 outline-none transition-all text-white"
+              className="w-full bg-white/5 border border-white/10 rounded-xl py-3 pl-12 pr-4 focus:border-violet-500 focus:ring-1 focus:ring-violet-500 outline-none transition-all text-white placeholder:text-white/20"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
             />
           </div>
 
-          {error && <p className="text-red-400 text-sm text-center font-medium">{error}</p>}
+          {error && (
+            <motion.p 
+              initial={{ opacity: 0 }} 
+              animate={{ opacity: 1 }} 
+              className="text-red-400 text-sm text-center font-medium bg-red-400/10 py-2 rounded-lg border border-red-400/20"
+            >
+              {error}
+            </motion.p>
+          )}
 
           <button 
             type="submit" 
             disabled={loading}
-            className="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-3 rounded-xl transition-all flex items-center justify-center gap-2 group disabled:opacity-50"
+            className="w-full bg-violet-600 hover:bg-violet-700 text-white font-bold py-3.5 rounded-xl transition-all flex items-center justify-center gap-2 group disabled:opacity-50 shadow-lg shadow-violet-900/20"
           >
             {loading ? 'Đang xử lý...' : (isLogin ? 'Đăng nhập' : 'Tạo tài khoản')}
             <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
@@ -139,7 +147,7 @@ export default function Auth({ onLogin }: { onLogin: (user: any) => void }) {
         <div className="mt-8 text-center">
           <button 
             onClick={() => setIsLogin(!isLogin)}
-            className="text-gray-400 hover:text-emerald-400 text-sm transition-colors"
+            className="text-violet-300/60 hover:text-violet-300 text-sm transition-colors font-medium"
           >
             {isLogin ? "Bạn chưa có tài khoản? Đăng ký ngay" : "Đã có tài khoản rồi? Đăng nhập"}
           </button>
