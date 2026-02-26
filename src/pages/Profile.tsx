@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { motion, AnimatePresence } from 'framer-motion';
-import { UserCircle, Star, Clock, BookOpen, Trophy, Calendar, CheckCircle2, Flame, Edit2, Camera, Rocket, Search, Users, UserPlus, Plus, MessageCircle, Send, Sparkles, MapPin } from 'lucide-react';
+// ĐÃ SỬA CHUẨN 100%: Sử dụng motion/react theo đúng package.json của Linh
+import { motion, AnimatePresence } from 'motion/react';
+import { UserCircle, Star, Clock, BookOpen, Trophy, Calendar, CheckCircle2, Flame, Edit2, Camera, Rocket, Search, Users, UserPlus, Plus, MessageCircle, Send, Sparkles } from 'lucide-react';
 
 const CHARACTERS = [
   { id: 1, name: 'Học giả Tập trung', emoji: '👨‍🎓' },
@@ -29,7 +30,7 @@ const VEHICLES = [
   { id: 10, name: 'Phượng hoàng lửa', emoji: '🔥' },
 ];
 
-// --- MOCK DATA ĐỂ TRÁNH LỖI TRẮNG MÀN HÌNH ---
+// --- MOCK DATA (Dữ liệu mẫu để web không bị trắng khi chưa có API) ---
 const MOCK_FRIENDS = [
   { id: 101, name: 'Tấn Dũng', level: 5, points: 1200 },
   { id: 102, name: 'Ngọc Quyết', level: 3, points: 850 },
@@ -54,7 +55,7 @@ function cn(...inputs: any[]) {
 }
 
 export default function Profile({ user, setUser }: { user: any, setUser: (user: any) => void }) {
-  // Sử dụng Mock Data trực tiếp thay vì chờ API
+  // Gán sẵn Mock Data để tránh lỗi undefined
   const [stats, setStats] = useState<any>({ logs: [], achievements: [1, 2, 3] });
   const [inventory, setInventory] = useState<any[]>(MOCK_INVENTORY);
   const [isRenaming, setIsRenaming] = useState(false);
@@ -70,6 +71,7 @@ export default function Profile({ user, setUser }: { user: any, setUser: (user: 
   const [chatMessages, setChatMessages] = useState<any[]>([]);
   const [newMessage, setNewMessage] = useState('');
 
+  // Lấy tên một cách an toàn
   const firstName = user?.name ? user.name.split(' ').pop() : 'Bạn';
 
   // Chức năng tìm kiếm giả lập
@@ -89,11 +91,10 @@ export default function Profile({ user, setUser }: { user: any, setUser: (user: 
     const friend = [...MOCK_FRIENDS, ...MOCK_SUGGESTIONS].find(f => f.id === id);
     if (friend) {
       setViewingUser({
-        user: { ...friend, max_correct_streak: 15, total_quizzes_answered: 42 },
+        user: { ...friend, max_correct_streak: 15, total_quizzes_answered: 42, avatar_url: '' },
         achievements: [1, 2, 3, 4],
         inventory: MOCK_INVENTORY
       });
-      // Giả lập tin nhắn
       setChatMessages([
         { id: 1, sender_id: id, content: `Chào ${firstName}!`, timestamp: new Date().toISOString() }
       ]);
@@ -104,7 +105,7 @@ export default function Profile({ user, setUser }: { user: any, setUser: (user: 
     if (!newMessage.trim() || !viewingUser) return;
     const newMsg = {
       id: Date.now(),
-      sender_id: user.id,
+      sender_id: user?.id || 1,
       content: newMessage,
       timestamp: new Date().toISOString()
     };
@@ -137,7 +138,7 @@ export default function Profile({ user, setUser }: { user: any, setUser: (user: 
   return (
     <div className="max-w-6xl mx-auto pb-20 space-y-8">
       
-      {/* HEADER SIÊU CẤP PRO */}
+      {/* HEADER */}
       <div className="bg-white rounded-[40px] shadow-xl overflow-hidden border-4 border-violet-50">
         <div className="h-56 md:h-72 bg-gradient-to-br from-violet-600 via-purple-600 to-fuchsia-600 relative overflow-hidden group">
           <div className="absolute inset-0 opacity-20 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')]"></div>
@@ -204,7 +205,7 @@ export default function Profile({ user, setUser }: { user: any, setUser: (user: 
 
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
         
-        {/* ---------------- CỘT TRÁI: GIỚI THIỆU & BẠN BÈ ---------------- */}
+        {/* CỘT TRÁI */}
         <div className="xl:col-span-1 space-y-8">
           <div className="bg-white p-8 rounded-[40px] shadow-xl border-4 border-violet-50">
             <h3 className="text-2xl font-black text-text-main mb-6">Trang bị</h3>
@@ -250,7 +251,7 @@ export default function Profile({ user, setUser }: { user: any, setUser: (user: 
               {(searchResults.length > 0 ? searchResults : suggestions).slice(0, 4).map(u => (
                 <div key={u.id} className="flex items-center justify-between bg-white border-2 border-violet-50 p-3 rounded-2xl hover:border-violet-200 transition-all group">
                   <div className="flex items-center gap-3 cursor-pointer" onClick={() => viewPublicProfile(u.id)}>
-                    <img src={u.avatar_url || `https://api.dicebear.com/7.x/avataaars/svg?seed=${u.name}`} className="w-12 h-12 rounded-xl bg-violet-100 object-cover shadow-sm group-hover:scale-105 transition-transform" />
+                    <img src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${u.name}`} className="w-12 h-12 rounded-xl bg-violet-100 object-cover shadow-sm group-hover:scale-105 transition-transform" />
                     <div>
                       <span className="text-sm font-black text-text-main block">{u?.name || 'User'}</span>
                       <span className="text-[10px] font-bold text-text-muted">Lv. {u?.level || 1}</span>
@@ -263,12 +264,10 @@ export default function Profile({ user, setUser }: { user: any, setUser: (user: 
               ))}
             </div>
           </div>
-
         </div>
 
-        {/* ---------------- CỘT PHẢI: THỐNG KÊ & BỘ SƯU TẬP ---------------- */}
+        {/* CỘT PHẢI */}
         <div className="xl:col-span-2 space-y-8">
-          
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
             <div className="bg-gradient-to-br from-blue-500 to-blue-600 p-6 rounded-[30px] shadow-xl text-white relative overflow-hidden group">
               <div className="absolute -right-4 -bottom-4 opacity-20 group-hover:scale-110 transition-transform"><Star size={80}/></div>
@@ -304,7 +303,7 @@ export default function Profile({ user, setUser }: { user: any, setUser: (user: 
                 {friends.map(f => (
                   <div key={f.id} className="min-w-[100px] flex flex-col items-center gap-2 cursor-pointer group" onClick={() => viewPublicProfile(f.id)}>
                     <div className="w-20 h-20 rounded-[24px] bg-violet-100 p-1 border-2 border-transparent group-hover:border-violet-500 transition-all shadow-md">
-                      <img src={f.avatar_url || `https://api.dicebear.com/7.x/avataaars/svg?seed=${f.name}`} className="w-full h-full object-cover rounded-[18px]" />
+                      <img src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${f.name}`} className="w-full h-full object-cover rounded-[18px]" />
                     </div>
                     <p className="text-sm font-black text-text-main truncate w-full text-center group-hover:text-violet-600">
                       {f?.name ? f.name.split(' ').pop() : 'Bạn'}
@@ -364,7 +363,7 @@ export default function Profile({ user, setUser }: { user: any, setUser: (user: 
         </div>
       </div>
 
-      {/* ---------------- MODALS ---------------- */}
+      {/* MODALS */}
       <AnimatePresence>
         {isRenaming && (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
@@ -419,7 +418,6 @@ export default function Profile({ user, setUser }: { user: any, setUser: (user: 
             <motion.div initial={{ scale: 0.9, y: 20 }} animate={{ scale: 1, y: 0 }} className="bg-white rounded-[40px] max-w-5xl w-full h-[85vh] flex flex-col md:flex-row shadow-2xl overflow-hidden relative border-4 border-violet-100">
               <button onClick={() => setViewingUser(null)} className="absolute top-6 right-6 text-violet-300 hover:text-red-500 z-50 bg-white p-2 rounded-full shadow-md transition-all"><Plus className="rotate-45" size={28} /></button>
               
-              {/* Cột trái: Thông tin bạn bè */}
               <div className="w-full md:w-5/12 p-10 bg-violet-50 overflow-y-auto border-r-2 border-violet-100">
                 <div className="text-center space-y-4">
                   <img src={viewingUser.user.avatar_url || `https://api.dicebear.com/7.x/avataaars/svg?seed=${viewingUser.user.name}`} className="w-32 h-32 rounded-[30px] mx-auto bg-white border-4 border-white shadow-xl object-cover" />
@@ -456,7 +454,6 @@ export default function Profile({ user, setUser }: { user: any, setUser: (user: 
                 </div>
               </div>
 
-              {/* Cột phải: Chat */}
               <div className="w-full md:w-7/12 flex flex-col bg-white">
                 <div className="p-6 border-b-2 border-violet-50 flex items-center gap-3">
                   <div className="w-10 h-10 rounded-xl bg-violet-100 flex items-center justify-center text-violet-600"><MessageCircle size={20} /></div>
@@ -471,10 +468,10 @@ export default function Profile({ user, setUser }: { user: any, setUser: (user: 
                     </div>
                   ) : (
                     chatMessages.map((msg: any) => (
-                      <div key={msg.id} className={cn("flex flex-col max-w-[75%]", msg.sender_id === user.id ? "ml-auto items-end" : "mr-auto items-start")}>
+                      <div key={msg.id} className={cn("flex flex-col max-w-[75%]", msg.sender_id === user?.id ? "ml-auto items-end" : "mr-auto items-start")}>
                         <div className={cn(
                           "px-5 py-3 rounded-[24px] font-bold text-sm shadow-sm",
-                          msg.sender_id === user.id ? "bg-violet-600 text-white rounded-tr-sm" : "bg-white text-text-main border border-violet-100 rounded-tl-sm"
+                          msg.sender_id === user?.id ? "bg-violet-600 text-white rounded-tr-sm" : "bg-white text-text-main border border-violet-100 rounded-tl-sm"
                         )}>
                           {msg.content}
                         </div>
