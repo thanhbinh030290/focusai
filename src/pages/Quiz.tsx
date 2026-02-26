@@ -18,11 +18,12 @@ const VEHICLES = Array.from({ length: 30 }, (_, i) => ({
 }));
 
 export default function Quiz({ user, setUser }: { user: any, setUser: (user: any) => void }) {
+  const [level, setLevel] = useState('Trung học cơ sở');
   const [category, setCategory] = useState('Khoa học tự nhiên');
   const [subject, setSubject] = useState('Toán học');
   const [difficulty, setDifficulty] = useState('Trung bình');
   const [quizType, setQuizType] = useState('Trắc nghiệm');
-  const [grade, setGrade] = useState('10');
+  const [grade, setGrade] = useState('6');
   const [questionCount, setQuestionCount] = useState(5);
   const [quizzes, setQuizzes] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
@@ -391,12 +392,47 @@ export default function Quiz({ user, setUser }: { user: any, setUser: (user: any
 
       <AnimatePresence mode="wait">
         {gameState === 'lobby' && (() => {
-          const categories: any = {
-            'Khoa học tự nhiên': ['Toán học', 'Vật lý', 'Hóa học', 'Sinh học'],
-            'Khoa học xã hội': ['Ngữ văn', 'Lịch sử', 'Địa lý'],
-            'Pháp luật': ['Luật dân sự', 'Luật hình sự', 'Luật kinh tế'],
-            'Truyền thông': ['Báo chí', 'Marketing', 'PR'],
-            'Kinh tế': ['Kinh tế học', 'Tài chính', 'Kế toán']
+          const LEVELS: any = {
+            'Trung học cơ sở': {
+              grades: ['6', '7', '8', '9'],
+              categories: {
+                'Khoa học tự nhiên': ['Toán học', 'Vật lý', 'Hóa học', 'Sinh học'],
+                'Khoa học xã hội': ['Ngữ văn', 'Lịch sử', 'Địa lý'],
+                'Ngoại ngữ': ['Tiếng Anh']
+              }
+            },
+            'Trung học phổ thông': {
+              grades: ['10', '11', '12'],
+              categories: {
+                'Khoa học tự nhiên': ['Toán học', 'Vật lý', 'Hóa học', 'Sinh học'],
+                'Khoa học xã hội': ['Ngữ văn', 'Lịch sử', 'Địa lý'],
+                'Ngoại ngữ': ['Tiếng Anh']
+              }
+            },
+            'Đại học': {
+              grades: ['Đại học'],
+              categories: {
+                'Khoa học tự nhiên': ['Toán cao cấp', 'Vật lý đại cương', 'Hóa đại cương'],
+                'Khoa học xã hội': ['Triết học', 'Xã hội học', 'Tâm lý học'],
+                'Pháp luật': ['Luật dân sự', 'Luật hình sự', 'Luật kinh tế'],
+                'Truyền thông': ['Báo chí', 'Marketing', 'PR'],
+                'Kinh tế': ['Kinh tế vĩ mô', 'Kinh tế vi mô', 'Tài chính', 'Kế toán']
+              }
+            }
+          };
+
+          const handleLevelChange = (newLevel: string) => {
+            setLevel(newLevel);
+            const newGrades = LEVELS[newLevel].grades;
+            setGrade(newGrades[0]);
+            const newCategories = Object.keys(LEVELS[newLevel].categories);
+            setCategory(newCategories[0]);
+            setSubject(LEVELS[newLevel].categories[newCategories[0]][0]);
+          };
+
+          const handleCategoryChange = (newCategory: string) => {
+            setCategory(newCategory);
+            setSubject(LEVELS[level].categories[newCategory][0]);
           };
 
           return (
@@ -413,16 +449,39 @@ export default function Quiz({ user, setUser }: { user: any, setUser: (user: any
               
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-4xl mx-auto">
                 <div className="space-y-2 text-left">
+                  <label className="text-xs font-bold text-text-muted uppercase">Cấp độ</label>
+                  <select 
+                    value={level}
+                    onChange={(e) => handleLevelChange(e.target.value)}
+                    className="w-full bg-bg-main border border-border-subtle rounded-xl py-3 px-4 outline-none focus:border-primary transition-all"
+                  >
+                    {Object.keys(LEVELS).map(l => (
+                      <option key={l} value={l}>{l}</option>
+                    ))}
+                  </select>
+                </div>
+
+                <div className="space-y-2 text-left">
+                  <label className="text-xs font-bold text-text-muted uppercase">Khối lớp</label>
+                  <select 
+                    value={grade}
+                    onChange={(e) => setGrade(e.target.value)}
+                    className="w-full bg-bg-main border border-border-subtle rounded-xl py-3 px-4 outline-none focus:border-primary transition-all"
+                  >
+                    {LEVELS[level].grades.map((g: string) => (
+                      <option key={g} value={g}>{g === 'Đại học' ? g : `Lớp ${g}`}</option>
+                    ))}
+                  </select>
+                </div>
+
+                <div className="space-y-2 text-left">
                   <label className="text-xs font-bold text-text-muted uppercase">Lĩnh vực</label>
                   <select 
                     value={category}
-                    onChange={(e) => {
-                      setCategory(e.target.value);
-                      setSubject(categories[e.target.value][0]);
-                    }}
+                    onChange={(e) => handleCategoryChange(e.target.value)}
                     className="w-full bg-bg-main border border-border-subtle rounded-xl py-3 px-4 outline-none focus:border-primary transition-all"
                   >
-                    {Object.keys(categories).map(c => (
+                    {Object.keys(LEVELS[level].categories).map(c => (
                       <option key={c} value={c}>{c}</option>
                     ))}
                   </select>
@@ -435,21 +494,8 @@ export default function Quiz({ user, setUser }: { user: any, setUser: (user: any
                     onChange={(e) => setSubject(e.target.value)}
                     className="w-full bg-bg-main border border-border-subtle rounded-xl py-3 px-4 outline-none focus:border-primary transition-all"
                   >
-                    {categories[category].map((s: string) => (
+                    {LEVELS[level].categories[category].map((s: string) => (
                       <option key={s} value={s}>{s}</option>
-                    ))}
-                  </select>
-                </div>
-
-                <div className="space-y-2 text-left">
-                  <label className="text-xs font-bold text-text-muted uppercase">Khối lớp</label>
-                  <select 
-                    value={grade}
-                    onChange={(e) => setGrade(e.target.value)}
-                    className="w-full bg-bg-main border border-border-subtle rounded-xl py-3 px-4 outline-none focus:border-primary transition-all"
-                  >
-                    {["6", "7", "8", "9", "10", "11", "12", "Đại học"].map(g => (
-                      <option key={g} value={g}>{g.includes('Đại') ? g : `Lớp ${g}`}</option>
                     ))}
                   </select>
                 </div>

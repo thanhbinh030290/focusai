@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
-import { Trophy, Star, Zap, Target, Flame, Award, BookOpen, Clock, ShieldCheck, CheckCircle2, Sparkles, Calendar, XCircle, Smile } from 'lucide-react';
+import { Trophy, Star, Zap, Target, Flame, Award, BookOpen, Clock, ShieldCheck, CheckCircle2, Sparkles, Calendar, XCircle, Smile, Meh, Frown, TrendingUp, TrendingDown, Lock } from 'lucide-react';
 
 export default function Achievements({ user }: { user: any }) {
   const [stats, setStats] = useState<any>({ logs: [], achievements: [] });
@@ -62,9 +62,9 @@ export default function Achievements({ user }: { user: any }) {
             Thành tích tuần này
           </h2>
           <div className="flex gap-4 text-xs font-bold">
-            <div className="flex items-center gap-1 text-emerald-500"><CheckCircle2 size={14} /> Tích cực</div>
-            <div className="flex items-center gap-1 text-yellow-500"><CheckCircle2 size={14} /> Trung bình</div>
-            <div className="flex items-center gap-1 text-red-500"><XCircle size={14} /> Chưa đạt</div>
+            <div className="flex items-center gap-1 text-emerald-500"><Smile size={16} /> Tích cực</div>
+            <div className="flex items-center gap-1 text-yellow-500"><Meh size={16} /> Trung bình</div>
+            <div className="flex items-center gap-1 text-red-500"><Frown size={16} /> Chưa đạt</div>
           </div>
         </div>
         <div className="grid grid-cols-7 gap-4">
@@ -76,13 +76,54 @@ export default function Achievements({ user }: { user: any }) {
                 day.status === 'average' ? "bg-yellow-50 border-yellow-200 text-yellow-500" :
                 "bg-red-50 border-red-200 text-red-500"
               )}>
-                {day.status === 'positive' ? <CheckCircle2 size={24} /> : 
-                 day.status === 'average' ? <CheckCircle2 size={24} className="opacity-60" /> : 
-                 <XCircle size={24} />}
+                {day.status === 'positive' ? <Smile size={32} /> : 
+                 day.status === 'average' ? <Meh size={32} /> : 
+                 <Frown size={32} />}
               </div>
               <span className="text-sm font-bold text-text-muted">{day.day}</span>
             </div>
           ))}
+        </div>
+      </div>
+
+      {/* Monthly Tracker & Goals */}
+      <div className="glass p-8 rounded-[32px] border-primary/20 bg-gradient-to-br from-blue-500/5 to-emerald-500/5">
+        <div className="flex items-center justify-between mb-6">
+          <h2 className="text-xl font-bold text-text-main flex items-center gap-2">
+            <Target className="text-primary" size={24} />
+            Tổng kết tháng & Mục tiêu
+          </h2>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div className="space-y-4">
+            <h3 className="font-bold text-text-muted uppercase text-xs tracking-wider">So sánh với tuần trước</h3>
+            <div className="bg-white p-6 rounded-2xl shadow-sm border border-black/5 space-y-4">
+              <div className="flex justify-between items-center">
+                <span className="text-sm font-bold text-text-main">Ngày tích cực</span>
+                <span className="text-emerald-500 font-bold flex items-center gap-1"><TrendingUp size={16} /> +20%</span>
+              </div>
+              <div className="w-full bg-gray-100 rounded-full h-2">
+                <div className="bg-emerald-500 h-2 rounded-full" style={{ width: '70%' }}></div>
+              </div>
+              <div className="flex justify-between items-center pt-2">
+                <span className="text-sm font-bold text-text-main">Ngày chưa đạt</span>
+                <span className="text-emerald-500 font-bold flex items-center gap-1"><TrendingDown size={16} /> -15%</span>
+              </div>
+              <div className="w-full bg-gray-100 rounded-full h-2">
+                <div className="bg-red-400 h-2 rounded-full" style={{ width: '30%' }}></div>
+              </div>
+            </div>
+          </div>
+          <div className="space-y-4">
+            <h3 className="font-bold text-text-muted uppercase text-xs tracking-wider">Mục tiêu tuần tới</h3>
+            <div className="bg-primary/10 p-6 rounded-2xl border border-primary/20 h-full flex flex-col justify-center items-center text-center space-y-3">
+              <div className="w-12 h-12 bg-primary text-white rounded-full flex items-center justify-center shadow-lg shadow-primary/30">
+                <Flame size={24} />
+              </div>
+              <p className="font-bold text-text-main text-lg">Tăng thêm 1 giờ học tập mỗi ngày</p>
+              <p className="text-sm text-text-muted">Dựa trên phong độ tích cực của bạn tuần này, hãy thử thách bản thân thêm một chút nhé!</p>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -95,12 +136,17 @@ export default function Achievements({ user }: { user: any }) {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               className={cn(
-                "glass p-6 rounded-3xl border flex items-center gap-6 transition-all",
-                isUnlocked ? "border-primary/30 bg-primary/5" : "border-border-subtle opacity-50 grayscale"
+                "glass p-6 rounded-3xl border flex items-center gap-6 transition-all relative overflow-hidden",
+                isUnlocked ? "border-primary/30 bg-primary/5" : "border-border-subtle bg-gray-50 opacity-90"
               )}
             >
+              {!isUnlocked && (
+                <div className="absolute top-4 right-4 text-text-muted/50">
+                  <Lock size={20} />
+                </div>
+              )}
               <div className={cn(
-                "w-16 h-16 rounded-2xl flex items-center justify-center text-white shadow-lg",
+                "w-16 h-16 shrink-0 rounded-2xl flex items-center justify-center text-white shadow-lg",
                 ach.color
               )}>
                 <ach.icon size={32} />

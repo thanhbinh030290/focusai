@@ -7,7 +7,6 @@ const CHARACTERS = [
   { id: 2, name: 'Phi hành gia', price: 100, emoji: '🧑‍🚀', color: '#3b82f6' },
   { id: 3, name: 'Pháp sư Tri thức', price: 200, emoji: '🧙‍♂️', color: '#8b5cf6' },
   { id: 4, name: 'Ninja Kỷ luật', price: 300, emoji: '🥷', color: '#1f2937' },
-  { id: 5, name: 'Robot Thông minh', price: 400, emoji: '🤖', color: '#94a3b8' },
   { id: 6, name: 'Người ngoài hành tinh', price: 500, emoji: '👽', color: '#22c55e' },
   { id: 7, name: 'Siêu anh hùng', price: 600, emoji: '🦸‍♂️', color: '#ef4444' },
   { id: 8, name: 'Thám tử', price: 700, emoji: '🕵️‍♂️', color: '#4b5563' },
@@ -19,7 +18,8 @@ const CHARACTERS = [
     price: (i + 11) * 100,
     color: `hsl(${(i * 137.5 + 100) % 360}, 70%, 60%)`,
     emoji: ['🧛‍♂️', '🧟‍♂️', '🧞‍♂️', '🧜‍♂️', '🧚‍♂️', '👼', '🤴', '👸', '🤶', '🎅'][i % 10]
-  }))
+  })),
+  { id: 5, name: 'FocusAI Thông Minh', price: 99999, emoji: '🤖', color: '#fbbf24' }
 ];
 
 const VEHICLES = [

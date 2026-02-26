@@ -69,22 +69,12 @@ export default function Tutor({ user }: { user: any }) {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl text-text-main flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl overflow-hidden flex items-center justify-center border border-primary/20">
-              <img 
-                src="https://lh3.googleusercontent.com/gg/AMW1TPq20fwUh3ggnf-W9BQEdZAK2Obb3XjVMsEEpVdx-Qt6NBcyOlX0fKyhvL6oKpxdO4Ij602JFOSpxZB9HeXlKQOso4OGeT978d3hzh-G4L1w0sOSudGiE2O6FEkWDFFad7hKrCN8SICGMJcYXWmN604Eu8QzVhJcNxm6s0ZtQaPKPnzEVSoYOqDkI6LxL-0lNwJBqNNfTKMKTwr8NwnBwLi1cnSGFstOkFa8JdgGJZoakTXfr5IDqK2wwm9VYowlhxghW5qfZSPDEP05iL8n6FiBjPv02W5TIS_dcJ9kM4uxdQ16daKrBYUkxwV1VLeJv8zRHQIXKwXOlj3JNyZ2dhOS=s1024-rj" 
-                alt="FocusAI Logo"
-                className="w-full h-full object-cover"
-                referrerPolicy="no-referrer"
-              />
-            </div>
-            FocusAI Tutor
+            <Bot className="text-primary" size={32} />
+            AI Tutor
           </h1>
           <p className="text-text-muted">Understand the universe.</p>
         </div>
-        <div className="hidden md:flex items-center gap-2 bg-primary/10 px-4 py-2 rounded-full border border-primary/20">
-          <Sparkles className="text-primary" size={16} />
-          <span className="text-xs font-bold text-primary uppercase tracking-wider">Powered by Gemini 3.0</span>
-        </div>
+
       </div>
 
       <div className="flex-1 glass rounded-3xl overflow-hidden flex flex-col relative">
@@ -95,13 +85,8 @@ export default function Tutor({ user }: { user: any }) {
         >
           {messages.length === 0 && (
             <div className="h-full flex flex-col items-center justify-center text-center max-w-md mx-auto space-y-8">
-              <div className="w-20 h-20 rounded-3xl overflow-hidden flex items-center justify-center primary-glow">
-                <img 
-                  src="https://lh3.googleusercontent.com/gg/AMW1TPq20fwUh3ggnf-W9BQEdZAK2Obb3XjVMsEEpVdx-Qt6NBcyOlX0fKyhvL6oKpxdO4Ij602JFOSpxZB9HeXlKQOso4OGeT978d3hzh-G4L1w0sOSudGiE2O6FEkWDFFad7hKrCN8SICGMJcYXWmN604Eu8QzVhJcNxm6s0ZtQaPKPnzEVSoYOqDkI6LxL-0lNwJBqNNfTKMKTwr8NwnBwLi1cnSGFstOkFa8JdgGJZoakTXfr5IDqK2wwm9VYowlhxghW5qfZSPDEP05iL8n6FiBjPv02W5TIS_dcJ9kM4uxdQ16daKrBYUkxwV1VLeJv8zRHQIXKwXOlj3JNyZ2dhOS=s1024-rj" 
-                  alt="FocusAI Logo"
-                  className="w-full h-full object-cover"
-                  referrerPolicy="no-referrer"
-                />
+              <div className="w-20 h-20 rounded-3xl bg-primary/10 flex items-center justify-center primary-glow">
+                <Bot className="text-primary" size={40} />
               </div>
               <div>
                 <h3 className="text-xl text-text-main mb-2">Bắt đầu buổi học thôi!</h3>
@@ -123,12 +108,7 @@ export default function Tutor({ user }: { user: any }) {
                 {msg.role === 'user' ? (
                   <User size={20} className="text-white" />
                 ) : (
-                  <img 
-                    src="https://lh3.googleusercontent.com/gg/AMW1TPq20fwUh3ggnf-W9BQEdZAK2Obb3XjVMsEEpVdx-Qt6NBcyOlX0fKyhvL6oKpxdO4Ij602JFOSpxZB9HeXlKQOso4OGeT978d3hzh-G4L1w0sOSudGiE2O6FEkWDFFad7hKrCN8SICGMJcYXWmN604Eu8QzVhJcNxm6s0ZtQaPKPnzEVSoYOqDkI6LxL-0lNwJBqNNfTKMKTwr8NwnBwLi1cnSGFstOkFa8JdgGJZoakTXfr5IDqK2wwm9VYowlhxghW5qfZSPDEP05iL8n6FiBjPv02W5TIS_dcJ9kM4uxdQ16daKrBYUkxwV1VLeJv8zRHQIXKwXOlj3JNyZ2dhOS=s1024-rj" 
-                    alt="FocusAI Logo"
-                    className="w-full h-full object-cover"
-                    referrerPolicy="no-referrer"
-                  />
+                  <Bot size={20} className="text-primary" />
                 )}
               </div>
               <div className={`max-w-[80%] p-4 rounded-2xl ${

@@ -257,9 +257,6 @@ export default function Profile({ user, setUser }: { user: any, setUser: (user: 
             </div>
 
             <div className="flex gap-2 mb-2">
-              <button className="bg-primary text-white px-6 py-2 rounded-lg font-bold shadow-lg shadow-primary/20 flex items-center gap-2">
-                <Plus size={18} /> Thêm vào tin
-              </button>
               <button className="bg-gray-100 text-text-main px-6 py-2 rounded-lg font-bold hover:bg-gray-200 transition-all flex items-center gap-2">
                 <Edit2 size={18} /> Chỉnh sửa trang cá nhân
               </button>

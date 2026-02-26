@@ -41,19 +41,13 @@ export default function App() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Tự động đăng nhập cho Linh để vào thẳng Dashboard
-    const fakeUser = {
-      name: 'Hà Quang Linh',
-      email: 'linhhqth08598@gmail.com',
-      level: 1,
-      exp: 10,
-      coins: 100
-    };
-    
-    localStorage.setItem('nexus_user', JSON.stringify(fakeUser));
-    setUser(fakeUser);
+    const savedUser = localStorage.getItem('nexus_user');
+    if (savedUser) {
+      setUser(JSON.parse(savedUser));
+    }
     setLoading(false);
   }, []);
+
   const handleLogout = () => {
     localStorage.removeItem('nexus_user');
     setUser(null);
@@ -101,12 +95,12 @@ function Sidebar({ onLogout, user }: { onLogout: () => void, user: any }) {
   
   const navItems = [
     { icon: LayoutDashboard, label: 'Dashboard', path: '/' },
+    { icon: Clock, label: 'Thời gian sử dụng', path: '/parental' },
     { icon: MessageSquare, label: 'AI Tutor', path: '/tutor' },
     { icon: BookOpen, label: 'Quizzes', path: '/quiz' },
     { icon: ShoppingBag, label: 'FocusAI Shop', path: '/shop' },
     { icon: Trophy, label: 'Achievements', path: '/achievements' },
     { icon: UserCircle, label: 'Profile', path: '/profile' },
-    { icon: User, label: 'Parental View', path: '/parental' },
   ];
 
   return (

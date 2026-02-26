@@ -146,7 +146,7 @@ export default function Dashboard({ user, setUser }: { user: any, setUser: (user
       {/* Header Section */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
         <div>
-          <h1 className="text-3xl md:text-4xl text-text-main mb-2">Thắng ơi, hôm nay bạn cảm thấy thế nào? 👋</h1>
+          <h1 className="text-3xl md:text-4xl text-text-main mb-2">{user.name} ơi, hôm nay bạn cảm thấy thế nào? 👋</h1>
           <p className="text-text-muted">FocusAI luôn đồng hành cùng bạn trên con đường chinh phục tri thức.</p>
         </div>
         
@@ -245,7 +245,7 @@ export default function Dashboard({ user, setUser }: { user: any, setUser: (user
                   type="text"
                   value={psychMessage}
                   onChange={(e) => setPsychMessage(e.target.value)}
-                  placeholder="Trò chuyện với chuyên gia tâm lý FocusAI..."
+                  placeholder="Trò chuyện với chuyên gia tâm lý..."
                   className="flex-1 bg-transparent px-4 py-2 outline-none text-text-main placeholder:text-text-muted/50"
                   onKeyDown={(e) => e.key === 'Enter' && handlePsychChat()}
                 />
