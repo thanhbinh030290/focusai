@@ -60,11 +60,11 @@ export default function Auth({ onLogin }: { onLogin: (user: any) => void }) {
       <motion.div 
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
-        className="w-full max-w-md bg-white p-8 rounded-[40px] shadow-2xl border border-violet-100"
+        className="w-full max-w-md bg-white p-10 rounded-[45px] shadow-2xl border-4 border-violet-100"
       >
         <div className="flex flex-col items-center mb-10">
-          {/* LOGO ĐÃ CÓ BORDER RADIUS VÀ SHADOW */}
-          <div className="w-24 h-24 mb-6 rounded-2xl overflow-hidden shadow-lg border-2 border-violet-200">
+          {/* 1. LOGO ĐÃ BO GÓC MƯỢT MÀ (rounded-3xl) */}
+          <div className="w-28 h-28 mb-6 rounded-3xl overflow-hidden shadow-2xl border-4 border-violet-50">
             <img 
               src="/Images/Gemini_Generated_Image_lmzhbclmzhbclmzh.png" 
               alt="FocusAI Logo" 
@@ -72,22 +72,23 @@ export default function Auth({ onLogin }: { onLogin: (user: any) => void }) {
             />
           </div>
           
-          {/* CHỮ NEXUS ĐÃ ĐẬM VÀ RÕ NÉT */}
-          <h1 className="text-4xl font-black text-violet-600 tracking-tighter mb-2">NEXUS</h1>
+          {/* 2. CHỮ NEXUS ĐÃ NỔI BẬT, MÀU TÍM ĐẬM SIÊU RÕ */}
+          <h1 className="text-5xl font-black text-violet-700 tracking-tight mb-2 drop-shadow-sm">NEXUS</h1>
           
-          <p className="text-violet-500 font-bold text-lg">
-            {isLogin ? 'Chào mừng Học giả quay trở lại' : 'Bắt đầu hành trình tập trung'}
+          {/* CHỮ HẾT MỜ (Xóa sạch opacity) */}
+          <p className="text-violet-600 font-black text-xl">
+            {isLogin ? 'Chào mừng Học giả quay lại' : 'Bắt đầu hành trình tập trung'}
           </p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">
           {!isLogin && (
             <div className="relative">
-              <User className="absolute left-4 top-1/2 -translate-y-1/2 text-violet-400" size={20} />
+              <User className="absolute left-5 top-1/2 -translate-y-1/2 text-violet-500" size={24} />
               <input 
                 type="text" 
                 placeholder="Họ và tên"
-                className="w-full bg-violet-50 border-2 border-violet-100 rounded-2xl py-4 pl-12 pr-4 focus:border-violet-500 focus:bg-white outline-none transition-all text-violet-900 font-bold placeholder:text-violet-300"
+                className="w-full bg-violet-50 border-2 border-violet-100 rounded-2xl py-5 pl-14 pr-5 focus:border-violet-600 focus:bg-white outline-none transition-all text-violet-950 font-black placeholder:text-violet-300"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 required={!isLogin}
@@ -96,11 +97,11 @@ export default function Auth({ onLogin }: { onLogin: (user: any) => void }) {
           )}
           
           <div className="relative">
-            <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-violet-400" size={20} />
+            <Mail className="absolute left-5 top-1/2 -translate-y-1/2 text-violet-500" size={24} />
             <input 
               type="email" 
               placeholder="Địa chỉ Email"
-              className="w-full bg-violet-50 border-2 border-violet-100 rounded-2xl py-4 pl-12 pr-4 focus:border-violet-500 focus:bg-white outline-none transition-all text-violet-900 font-bold placeholder:text-violet-300"
+              className="w-full bg-violet-50 border-2 border-violet-100 rounded-2xl py-5 pl-14 pr-5 focus:border-violet-600 focus:bg-white outline-none transition-all text-violet-950 font-black placeholder:text-violet-300"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
@@ -108,11 +109,11 @@ export default function Auth({ onLogin }: { onLogin: (user: any) => void }) {
           </div>
 
           <div className="relative">
-            <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-violet-400" size={20} />
+            <Lock className="absolute left-5 top-1/2 -translate-y-1/2 text-violet-500" size={24} />
             <input 
               type="password" 
               placeholder="Mật khẩu"
-              className="w-full bg-violet-50 border-2 border-violet-100 rounded-2xl py-4 pl-12 pr-4 focus:border-violet-500 focus:bg-white outline-none transition-all text-violet-900 font-bold placeholder:text-violet-300"
+              className="w-full bg-violet-50 border-2 border-violet-100 rounded-2xl py-5 pl-14 pr-5 focus:border-violet-600 focus:bg-white outline-none transition-all text-violet-950 font-black placeholder:text-violet-300"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
@@ -120,28 +121,27 @@ export default function Auth({ onLogin }: { onLogin: (user: any) => void }) {
           </div>
 
           {error && (
-            <div className="bg-red-50 border-l-4 border-red-500 p-3 rounded-lg">
-              <p className="text-red-600 text-sm font-black text-center">{error}</p>
+            <div className="bg-red-100 border-2 border-red-500 p-4 rounded-xl">
+              <p className="text-red-700 text-sm font-black text-center">{error}</p>
             </div>
           )}
 
           <button 
             type="submit" 
             disabled={loading}
-            className="w-full bg-violet-600 hover:bg-violet-700 text-white font-black text-lg py-4 rounded-2xl transition-all flex items-center justify-center gap-2 shadow-xl shadow-violet-200 active:scale-95 disabled:opacity-50"
+            className="w-full bg-violet-600 hover:bg-violet-800 text-white font-black text-xl py-5 rounded-2xl transition-all flex items-center justify-center gap-3 shadow-2xl shadow-violet-300 active:scale-95 disabled:opacity-50"
           >
-            {loading ? 'Đang xử lý...' : (isLogin ? 'Đăng nhập' : 'Tạo tài khoản ngay')}
-            <ArrowRight size={22} strokeWidth={3} />
+            {loading ? 'Đang xử lý...' : (isLogin ? 'Đăng nhập ngay' : 'Tạo tài khoản')}
+            <ArrowRight size={24} strokeWidth={4} />
           </button>
         </form>
 
-        <div className="mt-10 text-center">
+        <div className="mt-12 text-center">
           <button 
             onClick={() => setIsLogin(!isLogin)}
-            {/* HOVER ĐÃ SỬA: CHUYỂN SANG TÍM ĐẬM, KHÔNG CÒN TRẮNG XÓA */}
-            className="text-violet-400 hover:text-violet-800 text-sm font-black transition-colors uppercase tracking-widest border-b-2 border-violet-100 hover:border-violet-800 pb-1"
+            className="text-violet-500 hover:text-violet-900 text-base font-black transition-all uppercase tracking-widest border-b-4 border-violet-50 hover:border-violet-900 pb-1"
           >
-            {isLogin ? "Chưa có tài khoản? Đăng ký ngay" : "Đã có tài khoản? Đăng nhập"}
+            {isLogin ? "Chưa có tài khoản? Đăng ký" : "Đã có tài khoản? Đăng nhập"}
           </button>
         </div>
       </motion.div>
