@@ -1,17 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate, Link, useLocation } from 'react-router-dom';
 import { 
-  LayoutDashboard, 
-  MessageSquare, 
-  BookOpen, 
-  Trophy, 
-  User, 
-  LogOut, 
-  Clock, 
-  ShoppingBag,
-  UserCircle
+  LayoutDashboard, MessageSquare, BookOpen, Trophy, 
+  User, LogOut, Clock, ShoppingBag, UserCircle
 } from 'lucide-react';
-import { AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence } from 'motion/react'; // Giữ nguyên theo ý Linh
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 
@@ -55,7 +48,7 @@ export default function App() {
 
   return (
     <Router>
-      <div className="min-h-screen bg-bg-main text-text-main selection:bg-primary/30 font-sans">
+      <div className="min-h-screen bg-bg-main text-text-main font-sans">
         <AnimatePresence mode="wait">
           {!user ? (
             <Routes>
@@ -65,7 +58,7 @@ export default function App() {
           ) : (
             <div className="flex h-screen overflow-hidden">
               <Sidebar onLogout={handleLogout} user={user} />
-              <main className="flex-1 overflow-y-auto relative">
+              <main className="flex-1 overflow-y-auto relative bg-[#F8F9FE]">
                 <div className="p-4 md:p-8 max-w-7xl mx-auto pb-24 md:pb-8">
                   <Routes>
                     <Route path="/" element={<Dashboard user={user} setUser={setUser} />} />
@@ -94,7 +87,7 @@ function Sidebar({ onLogout, user }: { onLogout: () => void, user: any }) {
   
   const navItems = [
     { icon: LayoutDashboard, label: 'Dashboard', path: '/' },
-    { icon: Clock, label: 'Screen Time', path: '/screentime' },
+    { icon: Clock, label: 'Thời gian sử dụng', path: '/screentime' },
     { icon: MessageSquare, label: 'AI Tutor', path: '/tutor' },
     { icon: BookOpen, label: 'Quizzes', path: '/quiz' },
     { icon: ShoppingBag, label: 'FocusAI Shop', path: '/shop' },
@@ -104,16 +97,17 @@ function Sidebar({ onLogout, user }: { onLogout: () => void, user: any }) {
   ];
 
   return (
-    <aside className="hidden md:flex flex-col w-64 bg-bg-card border-r border-border-subtle p-6">
+    <aside className="hidden md:flex flex-col w-64 bg-white border-r border-violet-100 p-6 shadow-sm">
       <div className="flex items-center gap-3 mb-10 px-2">
-        <div className="w-12 h-12 bg-primary rounded-2xl flex items-center justify-center primary-glow overflow-hidden shadow-lg border-2 border-primary/20">
+        <div className="w-12 h-12 bg-violet-600 rounded-2xl flex items-center justify-center overflow-hidden shadow-lg border-2 border-violet-50">
+          {/* ĐÃ SỬA LỖI ĐƯỜNG DẪN LOGO */}
           <img 
             src="/Images/Gemini_Generated_Image_lmzhbclmzhbclmzh.png" 
             alt="FocusAI Logo"
             className="w-full h-full object-cover"
           />
         </div>
-        <h1 className="text-2xl font-black text-text-main tracking-tighter">FocusAI</h1>
+        <h1 className="text-2xl font-black text-violet-700 tracking-tighter">FocusAI</h1>
       </div>
 
       <nav className="flex-1 space-y-2">
@@ -122,37 +116,37 @@ function Sidebar({ onLogout, user }: { onLogout: () => void, user: any }) {
             key={item.path}
             to={item.path}
             className={cn(
-              "flex items-center gap-3 px-4 py-3.5 rounded-2xl transition-all duration-200 group font-black text-sm",
+              "flex items-center gap-3 px-4 py-3.5 rounded-2xl transition-all duration-300 group font-black text-sm",
               location.pathname === item.path 
-                ? "bg-primary text-white shadow-lg shadow-primary/30" 
-                : "text-text-muted hover:text-primary hover:bg-primary/5"
+                ? "bg-violet-600 text-white shadow-xl shadow-violet-200" 
+                : "text-violet-400 hover:text-violet-700 hover:bg-violet-50"
             )}
           >
             <item.icon size={20} className={cn(
               "transition-transform group-hover:scale-110",
-              location.pathname === item.path ? "text-white" : "text-primary"
+              location.pathname === item.path ? "text-white" : "text-violet-500"
             )} />
             <span>{item.label}</span>
           </Link>
         ))}
       </nav>
 
-      <div className="mt-auto pt-6 border-t border-border-subtle">
-        <div className="flex items-center gap-3 px-2 mb-6">
-          <div className="w-10 h-10 rounded-full bg-primary text-white flex items-center justify-center font-black border-2 border-white shadow-md">
+      <div className="mt-auto pt-6 border-t border-violet-50">
+        <div className="flex items-center gap-3 px-2 mb-6 bg-violet-50/50 p-3 rounded-2xl border border-violet-100">
+          <div className="w-10 h-10 rounded-full bg-violet-600 text-white flex items-center justify-center font-black border-2 border-white shadow-md">
             {user.name?.[0]?.toUpperCase() || 'U'}
           </div>
           <div className="flex-1 overflow-hidden">
-            <p className="text-sm font-black text-text-main truncate">{user.name}</p>
-            <p className="text-[10px] text-text-muted font-bold uppercase tracking-widest">Level {user.level || 1} Student</p>
+            <p className="text-sm font-black text-violet-900 truncate">{user.name}</p>
+            <p className="text-[10px] text-violet-400 font-bold uppercase tracking-widest">Level {user.level || 1}</p>
           </div>
         </div>
         <button 
           onClick={onLogout}
-          className="flex items-center gap-3 px-4 py-3 w-full rounded-2xl text-text-muted hover:text-red-500 hover:bg-red-500/10 transition-all font-black text-sm"
+          className="flex items-center gap-3 px-4 py-3 w-full rounded-2xl text-gray-400 hover:text-red-500 hover:bg-red-50 transition-all font-black text-sm"
         >
           <LogOut size={20} />
-          <span>Logout</span>
+          <span>Đăng xuất</span>
         </button>
       </div>
     </aside>
@@ -170,14 +164,14 @@ function MobileNav() {
   ];
 
   return (
-    <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-bg-card/90 backdrop-blur-xl border-t border-border-subtle px-6 py-4 flex justify-between items-center z-50">
+    <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-white/90 backdrop-blur-xl border-t border-violet-100 px-6 py-4 flex justify-between items-center z-50">
       {navItems.map((item) => (
         <Link
           key={item.path}
           to={item.path}
           className={cn(
             "p-3 rounded-2xl transition-all",
-            location.pathname === item.path ? "text-primary bg-primary/10 shadow-inner" : "text-text-muted"
+            location.pathname === item.path ? "text-violet-600 bg-violet-50 shadow-inner" : "text-gray-400"
           )}
         >
           <item.icon size={24} />
