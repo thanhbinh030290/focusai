@@ -16,12 +16,17 @@ export default function Auth({ onLogin }: { onLogin: (user: any) => void }) {
     setError('');
 
     try {
-      const res = await fetch('/api/auth/login', {
+      // Nếu đang ở form đăng nhập thì gọi login, nếu form đăng ký thì gọi register
+      const apiEndpoint = isLogin ? '/api/auth/login' : '/api/auth/register';
+      
+      const res = await fetch(apiEndpoint, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password, name }),
       });
+      
       const data = await res.json();
+      // ... phần còn lại giữ nguyên
       
       if (data.user) {
         localStorage.setItem('nexus_user', JSON.stringify(data.user));
