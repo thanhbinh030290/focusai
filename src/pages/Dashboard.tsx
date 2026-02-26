@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence } from 'motion/react';
 import { 
   Flame, Star, Clock, Smile, Frown, Meh, Plus, 
   TrendingDown, BookOpen, Zap, RefreshCw, Sparkles, 
@@ -25,7 +25,6 @@ export default function Dashboard({ user, setUser }: { user: any, setUser: (user
   const [editingDiaryId, setEditingDiaryId] = useState<number | null>(null);
   const psychScrollRef = useRef<HTMLDivElement>(null);
 
-  // Tự động cuộn xuống khi có tin nhắn mới
   useEffect(() => {
     if (psychScrollRef.current) {
       psychScrollRef.current.scrollTop = psychScrollRef.current.scrollHeight;
@@ -47,18 +46,11 @@ export default function Dashboard({ user, setUser }: { user: any, setUser: (user
     if (!newDiaryContent.trim()) return;
     const method = editingDiaryId ? 'PUT' : 'POST';
     const url = editingDiaryId ? `/api/diary/${editingDiaryId}` : '/api/diary';
-    
     await fetch(url, {
       method,
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        userId: user.id,
-        content: newDiaryContent,
-        emotion: diaryEmotion,
-        screentime: user.last_screentime || 0
-      }),
+      body: JSON.stringify({ userId: user.id, content: newDiaryContent, emotion: diaryEmotion, screentime: user.last_screentime || 0 }),
     });
-    
     setNewDiaryContent('');
     setEditingDiaryId(null);
     setShowDiary(false);
@@ -81,24 +73,19 @@ export default function Dashboard({ user, setUser }: { user: any, setUser: (user
   const handlePsychChat = async (directMsg?: string) => {
     const messageToSend = directMsg || psychMessage;
     if (!messageToSend.trim()) return;
-
     setPsychHistory(prev => [...prev, { role: 'user', text: messageToSend }]);
     setPsychMessage('');
     setLoadingPsych(true);
-
     try {
       const res = await fetch('/api/ai/psychology', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ 
-          message: messageToSend,
-          screentime: user.last_screentime || 0 
-        }),
+        body: JSON.stringify({ message: messageToSend, screentime: user.last_screentime || 0 }),
       });
       const data = await res.json();
-      setPsychHistory(prev => [...prev, { role: 'ai', text: data.text || "Mình đã nhận được thông tin, hãy tiếp tục chia sẻ nhé!" }]);
+      setPsychHistory(prev => [...prev, { role: 'ai', text: data.text || "Mình luôn ở đây để lắng nghe bạn." }]);
     } catch (e) {
-      setPsychHistory(prev => [...prev, { role: 'ai', text: "Có chút gián đoạn kết nối, Linh thử lại nhé!" }]);
+      setPsychHistory(prev => [...prev, { role: 'ai', text: "Kết nối hơi yếu, Linh thử lại nhé!" }]);
     } finally {
       setLoadingPsych(false);
     }
@@ -134,174 +121,101 @@ export default function Dashboard({ user, setUser }: { user: any, setUser: (user
 
   return (
     <div className="space-y-8">
-      {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
         <div>
           <h1 className="text-3xl md:text-4xl text-text-main font-black mb-2">{user.name} ơi, hôm nay thế nào? 👋</h1>
-          <p className="text-text-muted font-medium">FocusAI luôn đồng hành cùng bạn trên con đường chinh phục tri thức.</p>
+          <p className="text-text-muted font-bold italic">FocusAI đồng hành cùng bạn trên con đường tri thức.</p>
         </div>
-        
         <div className="flex gap-4">
-          <div className="glass px-6 py-3 rounded-2xl flex items-center gap-3 border-primary/20 shadow-lg">
+          <div className="glass px-6 py-3 rounded-2xl flex items-center gap-3 border-violet-100 shadow-lg">
             <Flame className="text-orange-500 fill-orange-500" size={24} />
             <div>
               <p className="text-[10px] text-text-muted uppercase font-black">Chuỗi</p>
-              <p className="text-xl font-bold text-text-main">{user.streak} ngày</p>
+              <p className="text-xl font-black text-text-main">{user.streak} ngày</p>
             </div>
           </div>
-          <div className="glass px-6 py-3 rounded-2xl flex items-center gap-3 border-primary/20 shadow-lg">
-            <Star className="text-primary fill-primary" size={24} />
+          <div className="glass px-6 py-3 rounded-2xl flex items-center gap-3 border-violet-100 shadow-lg">
+            <Star className="text-violet-600 fill-violet-600" size={24} />
             <div>
               <p className="text-[10px] text-text-muted uppercase font-black">Điểm</p>
-              <p className="text-xl font-bold text-text-main">{user.points}</p>
+              <p className="text-xl font-black text-text-main">{user.points}</p>
             </div>
           </div>
         </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {/* Daily Check-in Section */}
-        <motion.div 
-          whileHover={{ y: -5 }}
-          className="lg:col-span-3 glass p-10 rounded-[40px] relative overflow-hidden group min-h-[350px] flex flex-col justify-center border-primary/10 bg-gradient-to-br from-white via-white to-primary/5 shadow-xl"
-        >
-          <div className="absolute top-0 right-0 p-12 opacity-5 group-hover:opacity-10 transition-opacity pointer-events-none">
-            <Sparkles size={160} className="text-primary" />
-          </div>
-          <div className="absolute bottom-0 left-0 p-12 opacity-5 group-hover:opacity-10 transition-opacity pointer-events-none">
-            <Zap size={140} className="text-purple-500" />
-          </div>
-          
-          <h2 className="text-3xl font-black text-text-main mb-10 text-center tracking-tight">Tâm trạng của bạn hiện tại? ✨</h2>
-          
-          <div className="relative flex flex-wrap justify-center items-center gap-6 min-h-32">
+        <motion.div whileHover={{ y: -5 }} className="lg:col-span-3 glass p-10 rounded-[45px] relative overflow-hidden bg-gradient-to-br from-white via-white to-violet-50 border-violet-100 shadow-2xl min-h-[350px] flex flex-col justify-center">
+          <div className="absolute top-0 right-0 p-12 opacity-5 pointer-events-none"><Sparkles size={160} className="text-violet-600" /></div>
+          <h2 className="text-3xl font-black text-text-main mb-10 text-center tracking-tight">Tâm trạng của Linh hiện tại? ✨</h2>
+          <div className="relative flex flex-wrap justify-center items-center gap-6">
             <AnimatePresence mode="popLayout">
               {[
-                { icon: Smile, id: 'happy', label: 'Hạnh phúc', emoji: '😊', bg: 'bg-emerald-500/10' },
-                { icon: Sparkles, id: 'excited', label: 'Hưng phấn', emoji: '🤩', bg: 'bg-yellow-500/10' },
-                { icon: Meh, id: 'neutral', label: 'Bình thường', emoji: '😐', bg: 'bg-blue-500/10' },
-                { icon: Frown, id: 'sad', label: 'Buồn', emoji: '😢', bg: 'bg-orange-500/10' },
-                { icon: Zap, id: 'anxious', label: 'Lo âu', emoji: '😰', bg: 'bg-red-500/10' },
-                { icon: RefreshCw, id: 'confused', label: 'Hoang mang', emoji: '😵‍💫', bg: 'bg-purple-500/10' },
+                { id: 'happy', label: 'Hạnh phúc', emoji: '😊', bg: 'bg-emerald-500/10' },
+                { id: 'excited', label: 'Hưng phấn', emoji: '🤩', bg: 'bg-yellow-500/10' },
+                { id: 'neutral', label: 'Bình thường', emoji: '😐', bg: 'bg-blue-500/10' },
+                { id: 'sad', label: 'Buồn', emoji: '😢', bg: 'bg-orange-500/10' },
+                { id: 'anxious', label: 'Lo âu', emoji: '😰', bg: 'bg-red-500/10' },
               ].map((item) => (
                 (!selectedEmotion || selectedEmotion === item.id) && (
-                  <motion.div
-                    key={item.id}
-                    layoutId={`emotion-${item.id}`}
-                    initial={{ opacity: 0, scale: 0.5, y: 20 }}
-                    animate={{ opacity: 1, scale: 1, y: 0 }}
-                    exit={{ opacity: 0, scale: 0.5 }}
-                    whileHover={{ scale: 1.15, rotate: 5 }}
-                    onClick={() => !checkingIn && !selectedEmotion && handleCheckIn(item.id)}
-                    className={cn(
-                      "w-24 h-24 md:w-28 md:h-28 rounded-[32px] transition-all flex flex-col items-center justify-center gap-2 shadow-sm cursor-pointer",
-                      item.bg,
-                      selectedEmotion === item.id ? "ring-4 ring-primary ring-offset-4 scale-110" : "hover:shadow-xl",
-                      (checkingIn || !!selectedEmotion) && selectedEmotion !== item.id && "opacity-50 grayscale cursor-not-allowed"
-                    )}
+                  <motion.div key={item.id} layoutId={`emotion-${item.id}`} initial={{ opacity: 0, scale: 0.5 }} animate={{ opacity: 1, scale: 1 }}
+                    whileHover={{ scale: 1.1, rotate: 5 }} onClick={() => !checkingIn && !selectedEmotion && handleCheckIn(item.id)}
+                    className={cn("w-28 h-28 rounded-[35px] transition-all flex flex-col items-center justify-center gap-2 shadow-sm cursor-pointer border-2 border-transparent hover:border-violet-200", item.bg, selectedEmotion === item.id ? "ring-4 ring-violet-500 scale-110" : "")}
                   >
-                    <span className="text-4xl md:text-5xl">{item.emoji}</span>
-                    <span className="text-[10px] font-black text-text-muted uppercase tracking-tighter">{item.label}</span>
+                    <span className="text-5xl">{item.emoji}</span>
+                    <span className="text-[10px] font-black text-text-muted uppercase">{item.label}</span>
                   </motion.div>
                 )
               ))}
             </AnimatePresence>
           </div>
-
-          {/* Chat Bar Integrated */}
           <div className="mt-12 max-w-xl mx-auto w-full">
-            <div className="relative group">
-              <div className="absolute -inset-1 bg-gradient-to-r from-primary to-purple-600 rounded-2xl blur opacity-25 group-hover:opacity-50 transition duration-1000"></div>
-              <div className="relative flex gap-2 bg-white border-2 border-primary/30 rounded-2xl p-2 shadow-lg">
-                <input 
-                  type="text"
-                  value={psychMessage}
-                  onChange={(e) => setPsychMessage(e.target.value)}
-                  placeholder="Trò chuyện với chuyên gia tâm lý..."
-                  className="flex-1 bg-transparent px-4 py-2 outline-none text-text-main font-bold"
-                  onKeyDown={(e) => e.key === 'Enter' && handlePsychChat()}
-                />
-                <button 
-                  onClick={() => setShowPsychChat(true)}
-                  className="bg-primary text-white px-4 py-2 rounded-xl hover:bg-primary-dark transition-all flex items-center gap-2 font-black shadow-md"
-                >
-                  <MessageSquare size={18} />
-                  <span className="hidden sm:inline">Gửi</span>
-                </button>
-              </div>
+            <div className="relative flex gap-2 bg-white border-2 border-violet-200 rounded-2xl p-2 shadow-xl">
+              <input type="text" value={psychMessage} onChange={(e) => setPsychMessage(e.target.value)} placeholder="Trò chuyện với chuyên gia tâm lý..." className="flex-1 bg-transparent px-4 py-2 outline-none text-text-main font-black" onKeyDown={(e) => e.key === 'Enter' && setShowPsychChat(true)} />
+              <button onClick={() => setShowPsychChat(true)} className="bg-violet-600 text-white px-5 py-2 rounded-xl font-black shadow-lg hover:bg-violet-700 transition-all"><MessageSquare size={20} /></button>
             </div>
           </div>
         </motion.div>
 
-        {/* Psychology Modal - Chat History Version */}
+        {/* Psychology Modal */}
         <AnimatePresence>
           {showPsychChat && (
-            <motion.div 
-              initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-              className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
-            >
-              <motion.div 
-                initial={{ scale: 0.9, y: 20 }} animate={{ scale: 1, y: 0 }}
-                className="bg-white rounded-[32px] w-full max-w-2xl h-[85vh] flex flex-col overflow-hidden shadow-2xl"
-              >
-                <div className="p-6 border-b flex justify-between items-center bg-primary/5">
-                  <div className="flex items-center gap-3">
-                    <div className="w-12 h-12 rounded-2xl overflow-hidden border-2 border-primary/20 bg-white">
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-md">
+              <motion.div initial={{ scale: 0.9 }} animate={{ scale: 1 }} className="bg-white rounded-[40px] w-full max-w-2xl h-[85vh] flex flex-col overflow-hidden shadow-2xl border-4 border-violet-100">
+                <div className="p-6 border-b flex justify-between items-center bg-violet-50/50">
+                  <div className="flex items-center gap-4">
+                    <div className="w-14 h-14 rounded-2xl overflow-hidden border-2 border-violet-200 shadow-md">
                       <img src="/Images/Gemini_Generated_Image_lmzhbclmzhbclmzh.png" alt="Logo" className="w-full h-full object-cover" />
                     </div>
-                    <div>
-                      <h3 className="font-black text-text-main">Chuyên gia FocusAI</h3>
-                      <p className="text-[10px] text-text-muted font-bold uppercase tracking-widest">Đang lắng nghe bạn...</p>
-                    </div>
+                    <div><h3 className="font-black text-text-main text-xl">Chuyên gia FocusAI</h3><p className="text-[10px] text-violet-400 font-black uppercase tracking-widest">Đang lắng nghe Linh...</p></div>
                   </div>
-                  <button onClick={() => setShowPsychChat(false)} className="bg-gray-100 p-2 rounded-full hover:bg-red-50 hover:text-red-500 transition-colors">
-                    <Plus className="rotate-45" size={24} />
-                  </button>
+                  <button onClick={() => setShowPsychChat(false)} className="bg-violet-100 p-2 rounded-full hover:bg-red-500 hover:text-white transition-all"><Plus className="rotate-45" size={28} /></button>
                 </div>
-
-                <div ref={psychScrollRef} className="flex-1 overflow-y-auto p-6 space-y-6 scrollbar-hide">
-                  {psychHistory.length > 0 ? (
-                    psychHistory.map((msg, idx) => (
-                      <motion.div key={idx} initial={{ opacity: 0, x: msg.role === 'user' ? 20 : -20 }} animate={{ opacity: 1, x: 0 }}
-                        className={cn("flex gap-3", msg.role === 'user' ? "flex-row-reverse" : "flex-row")}
-                      >
-                        <div className={cn("w-10 h-10 rounded-xl flex items-center justify-center shrink-0 shadow-sm", 
-                          msg.role === 'user' ? "bg-primary text-white" : "bg-white border border-primary/20 text-primary")}>
-                          {msg.role === 'user' ? <UserCircle size={22} /> : <Bot size={22} />}
-                        </div>
-                        <div className={cn("max-w-[80%] p-4 rounded-2xl shadow-sm font-medium text-sm leading-relaxed", 
-                          msg.role === 'user' ? "bg-primary text-white rounded-tr-none" : "bg-primary/5 text-text-main border border-primary/10 rounded-tl-none")}>
-                          {msg.text}
-                        </div>
-                      </motion.div>
-                    ))
-                  ) : (
+                <div ref={psychScrollRef} className="flex-1 overflow-y-auto p-8 space-y-6 scrollbar-hide bg-[#FDFDFF]">
+                  {psychHistory.length > 0 ? psychHistory.map((msg, idx) => (
+                    <div key={idx} className={cn("flex gap-4", msg.role === 'user' ? "flex-row-reverse" : "flex-row")}>
+                      <div className={cn("w-10 h-10 rounded-xl flex items-center justify-center shadow-sm shrink-0", msg.role === 'user' ? "bg-violet-600 text-white" : "bg-white border border-violet-100 text-violet-600")}>
+                        {msg.role === 'user' ? <UserCircle size={24} /> : <Bot size={24} />}
+                      </div>
+                      <div className={cn("max-w-[80%] p-5 rounded-[25px] shadow-sm font-bold text-sm leading-relaxed", msg.role === 'user' ? "bg-violet-600 text-white rounded-tr-none" : "bg-violet-50 text-text-main border border-violet-100 rounded-tl-none")}>{msg.text}</div>
+                    </div>
+                  )) : (
                     <div className="h-full flex flex-col items-center justify-center text-center space-y-6">
-                      <div className="w-20 h-20 rounded-[28px] bg-primary/10 flex items-center justify-center text-primary animate-bounce">
-                        <Bot size={40} />
-                      </div>
-                      <div className="max-w-xs">
-                        <h4 className="font-black text-xl text-text-main mb-2">Chào Linh, mình đây!</h4>
-                        <p className="text-sm text-text-muted font-medium">Bạn muốn tâm sự về thói quen dùng mạng xã hội hay áp lực gì hôm nay không?</p>
-                      </div>
-                      <div className="flex flex-col gap-2 w-full max-w-xs">
-                        {["Làm sao bớt dùng TikTok?", "Tôi thấy lo khi thiếu điện thoại"].map(txt => (
-                          <button key={txt} onClick={() => handlePsychChat(txt)} className="p-3 bg-white border-2 border-primary/10 rounded-xl text-xs font-black text-primary hover:bg-primary hover:text-white transition-all">"{txt}"</button>
+                      <div className="w-24 h-24 rounded-[35px] bg-violet-100 flex items-center justify-center text-violet-600 animate-bounce shadow-inner"><Bot size={48} /></div>
+                      <h4 className="font-black text-2xl text-text-main">Chào Linh, mình đây!</h4>
+                      <p className="text-text-muted font-bold max-w-xs text-lg">Bạn muốn tâm sự về áp lực học tập hay thói quen dùng máy không?</p>
+                      <div className="flex flex-col gap-3 w-full max-w-xs">
+                        {["Làm sao bớt dùng TikTok?", "Mình thấy lo khi không có điện thoại"].map(txt => (
+                          <button key={txt} onClick={() => handlePsychChat(txt)} className="p-4 bg-white border-2 border-violet-50 rounded-2xl text-sm font-black text-violet-600 hover:bg-violet-600 hover:text-white transition-all shadow-sm">"{txt}"</button>
                         ))}
                       </div>
                     </div>
                   )}
-                  {loadingPsych && (
-                    <div className="flex gap-3"><div className="w-10 h-10 rounded-xl bg-primary/5 flex items-center justify-center animate-pulse"><Bot size={22} className="text-primary"/></div>
-                    <div className="bg-primary/5 p-4 rounded-2xl flex gap-1 items-center"><span className="w-2 h-2 bg-primary/40 rounded-full animate-bounce"/><span className="w-2 h-2 bg-primary/40 rounded-full animate-bounce [animation-delay:0.2s]"/><span className="w-2 h-2 bg-primary/40 rounded-full animate-bounce [animation-delay:0.4s]"/></div></div>
-                  )}
+                  {loadingPsych && <div className="flex gap-2 p-4 bg-violet-50 rounded-2xl w-fit animate-pulse"><span className="w-2 h-2 bg-violet-400 rounded-full animate-bounce"/><span className="w-2 h-2 bg-violet-400 rounded-full animate-bounce [animation-delay:0.2s]"/><span className="w-2 h-2 bg-violet-400 rounded-full animate-bounce [animation-delay:0.4s]"/></div>}
                 </div>
-
-                <div className="p-6 border-t bg-white">
-                  <div className="flex gap-2 bg-bg-main p-2 rounded-2xl border-2 border-border-subtle focus-within:border-primary transition-all">
-                    <input type="text" value={psychMessage} onChange={(e) => setPsychMessage(e.target.value)} placeholder="Nhập tâm sự của bạn..." className="flex-1 bg-transparent px-2 py-2 outline-none font-bold" onKeyDown={(e) => e.key === 'Enter' && handlePsychChat()} />
-                    <button onClick={() => handlePsychChat()} disabled={loadingPsych} className="bg-primary text-white p-3 rounded-xl hover:scale-105 active:scale-95 transition-all shadow-lg"><Zap size={20} className="fill-white" /></button>
-                  </div>
+                <div className="p-6 border-t bg-white flex gap-3">
+                  <input type="text" value={psychMessage} onChange={(e) => setPsychMessage(e.target.value)} placeholder="Nhập lời nhắn của Linh..." className="flex-1 bg-violet-50 border-2 border-violet-100 rounded-2xl px-6 py-4 font-black outline-none focus:border-violet-600 transition-all" onKeyDown={(e) => e.key === 'Enter' && handlePsychChat()} />
+                  <button onClick={() => handlePsychChat()} className="bg-violet-600 text-white p-4 rounded-2xl shadow-xl hover:scale-105 active:scale-95 transition-all"><Zap size={24} className="fill-white" /></button>
                 </div>
               </motion.div>
             </motion.div>
@@ -310,81 +224,38 @@ export default function Dashboard({ user, setUser }: { user: any, setUser: (user
 
         {/* Diary Section */}
         <div className="lg:col-span-3">
-          <div className="flex items-center justify-between mb-6">
-            <h2 className="text-2xl font-black text-text-main flex items-center gap-3"><BookOpen className="text-primary" size={24} /> Nhật ký hành trình</h2>
-            <button onClick={() => openDiaryEditor()} className="bg-primary/10 text-primary px-4 py-2 rounded-xl text-sm font-black flex items-center gap-2 hover:bg-primary hover:text-white transition-all shadow-sm">
-              Viết trang mới <Plus size={18} />
-            </button>
+          <div className="flex items-center justify-between mb-8">
+            <h2 className="text-2xl font-black text-text-main flex items-center gap-3"><BookOpen className="text-violet-600" size={28} /> Nhật ký hành trình</h2>
+            <button onClick={() => openDiaryEditor()} className="bg-violet-600 text-white px-6 py-3 rounded-2xl text-sm font-black flex items-center gap-2 hover:bg-violet-700 transition-all shadow-xl">Viết trang mới <Plus size={20} /></button>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {diaryEntries.length > 0 ? diaryEntries.slice(0, 3).map((entry: any) => (
-              <motion.div key={entry.id} whileHover={{ y: -5 }} onClick={() => openDiaryEditor(entry)}
-                className="glass p-6 rounded-[32px] border-primary/10 space-y-4 cursor-pointer hover:shadow-2xl transition-all bg-white/50"
-              >
-                <div className="flex justify-between items-center">
-                  <span className="text-3xl">{entry.emotion === 'happy' ? '😊' : entry.emotion === 'neutral' ? '😐' : '😟'}</span>
-                  <span className="text-[10px] font-black text-text-muted bg-gray-100 px-2 py-1 rounded-lg">{new Date(entry.timestamp).toLocaleDateString('vi-VN')}</span>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {diaryEntries.slice(0, 3).map((entry: any) => (
+              <motion.div key={entry.id} whileHover={{ y: -8 }} onClick={() => openDiaryEditor(entry)} className="glass p-8 rounded-[35px] border-violet-100 cursor-pointer bg-white shadow-xl hover:shadow-2xl transition-all">
+                <div className="flex justify-between items-center mb-4">
+                  <span className="text-4xl">{entry.emotion === 'happy' ? '😊' : '😐'}</span>
+                  <span className="text-[10px] font-black text-violet-400 bg-violet-50 px-3 py-1.5 rounded-full">{new Date(entry.timestamp).toLocaleDateString('vi-VN')}</span>
                 </div>
-                <p className="text-sm font-medium text-text-main line-clamp-3 italic leading-relaxed">"{entry.content}"</p>
-                <div className="pt-4 border-t border-primary/5 flex items-center gap-2 text-[10px] font-black text-primary uppercase">
-                  <Clock size={12} /> MXH: {entry.screentime} phút
-                </div>
+                <p className="text-md font-bold text-text-main line-clamp-3 italic leading-relaxed">"{entry.content}"</p>
+                <div className="pt-6 mt-4 border-t border-violet-50 text-[10px] font-black text-violet-600 uppercase flex items-center gap-2"><Clock size={14} /> Dùng MXH: {entry.screentime} phút</div>
               </motion.div>
-            )) : (
-              <div className="col-span-full glass p-12 rounded-[40px] text-center border-dashed border-4 border-primary/10 bg-primary/5">
-                <p className="text-text-muted font-black italic">Trang giấy còn trống... Hãy ghi lại cảm xúc của Linh hôm nay nhé!</p>
-              </div>
-            )}
+            ))}
           </div>
         </div>
 
         {/* Diary Modal - Vintage Wood Style */}
         <AnimatePresence>
           {showDiary && (
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-              className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-md"
-            >
-              <motion.div initial={{ scale: 0.8, rotateY: -30 }} animate={{ scale: 1, rotateY: 0 }}
-                className="bg-[#fffcf0] rounded-[40px] w-full max-w-2xl h-[85vh] md:h-[75vh] flex shadow-[0_30px_60px_-15px_rgba(0,0,0,0.5)] overflow-hidden border-[12px] border-[#5d4037]"
-              >
-                <div className="flex-1 p-10 flex flex-col bg-[url('https://www.transparenttextures.com/patterns/paper.png')]">
-                  <div className="flex justify-between items-center mb-8 border-b-4 border-[#5d4037] pb-4">
-                    <h3 className="text-3xl font-serif font-black text-[#5d4037]">
-                      {editingDiaryId ? 'Sửa bản thảo' : 'Ghi chép mới'}
-                    </h3>
-                    <button onClick={() => setShowDiary(false)} className="text-[#5d4037] hover:rotate-90 transition-all duration-300">
-                      <Plus className="rotate-45" size={32} />
-                    </button>
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-md">
+              <motion.div initial={{ scale: 0.8, rotateY: -20 }} animate={{ scale: 1, rotateY: 0 }} className="bg-[#fffcf0] rounded-[45px] w-full max-w-2xl h-[80vh] flex shadow-[0_40px_80px_-20px_rgba(0,0,0,0.6)] overflow-hidden border-[15px] border-[#5d4037]">
+                <div className="flex-1 p-12 flex flex-col bg-[url('https://www.transparenttextures.com/patterns/paper.png')]">
+                  <div className="flex justify-between items-center mb-8 border-b-4 border-[#5d4037] pb-6">
+                    <h3 className="text-4xl font-serif font-black text-[#5d4037]">{editingDiaryId ? 'Sửa bản thảo' : 'Ghi chép mới'}</h3>
+                    <button onClick={() => setShowDiary(false)} className="text-[#5d4037] hover:rotate-90 transition-all duration-300"><Plus className="rotate-45" size={38} /></button>
                   </div>
-                  <div className="flex-1 space-y-8 overflow-y-auto pr-2 scrollbar-hide">
-                    <div className="space-y-3">
-                      <label className="text-[10px] font-black text-[#8d6e63] uppercase tracking-widest">Cảm xúc trong tâm trí</label>
-                      <div className="flex gap-6">
-                        {['happy', 'neutral', 'anxious'].map(e => (
-                          <button key={e} onClick={() => setDiaryEmotion(e)}
-                            className={cn("text-4xl p-3 rounded-2xl transition-all shadow-sm", diaryEmotion === e ? "bg-[#5d4037] scale-110 rotate-3" : "bg-white/50 grayscale opacity-40 hover:opacity-100")}
-                          >
-                            {e === 'happy' ? '😊' : e === 'neutral' ? '😐' : '😟'}
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-                    <div className="flex-1 flex flex-col space-y-3">
-                      <label className="text-[10px] font-black text-[#8d6e63] uppercase tracking-widest">Dòng suy tư</label>
-                      <textarea value={newDiaryContent} onChange={(e) => setNewDiaryContent(e.target.value)}
-                        placeholder="Hôm nay tâm trí bạn đang ở đâu?..."
-                        className="flex-1 bg-transparent border-none outline-none text-xl font-serif font-bold text-[#5d4037] resize-none placeholder:text-[#d7ccc8] leading-loose"
-                      />
-                    </div>
-                    <div className="pt-6 border-t-2 border-[#d7ccc8] flex justify-between items-center">
-                      <div className="text-[10px] font-black text-[#8d6e63] uppercase space-y-1">
-                        <p>Màn hình: <span className="text-[#5d4037]">{user.last_screentime || 0}p</span></p>
-                        <p>Ngày: <span className="text-[#5d4037]">{new Date().toLocaleDateString('vi-VN')}</span></p>
-                      </div>
-                      <button onClick={handleSaveDiary} className="bg-[#5d4037] text-white px-10 py-4 rounded-2xl font-black text-lg hover:bg-[#4e342e] transition-all shadow-xl active:scale-95">
-                        {editingDiaryId ? 'Cập nhật sổ' : 'Lưu vào ký ức'}
-                      </button>
-                    </div>
+                  <textarea value={newDiaryContent} onChange={(e) => setNewDiaryContent(e.target.value)} placeholder="Hôm nay tâm trí Linh đang ở đâu?..." className="flex-1 bg-transparent border-none outline-none text-2xl font-serif font-black text-[#5d4037] resize-none leading-loose placeholder:text-[#d7ccc8]" />
+                  <div className="pt-8 border-t-2 border-[#d7ccc8] flex justify-between items-center">
+                    <div className="text-[10px] font-black text-[#8d6e63] uppercase tracking-widest"><p>Màn hình: <span className="text-[#5d4037]">{user.last_screentime || 0}p</span></p><p>Ngày: <span className="text-[#5d4037]">{new Date().toLocaleDateString('vi-VN')}</span></p></div>
+                    <button onClick={handleSaveDiary} className="bg-[#5d4037] text-white px-12 py-5 rounded-2xl font-black text-xl hover:bg-[#4e342e] transition-all shadow-2xl active:scale-95">Lưu vào ký ức</button>
                   </div>
                 </div>
               </motion.div>
