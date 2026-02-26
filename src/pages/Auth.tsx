@@ -41,7 +41,7 @@ export default function Auth({ onLogin }: { onLogin: (user: any) => void }) {
           .single();
 
         if (loginError || !data) {
-          setError('Sai email hoặc mật khẩu rồi bạn ơi!');
+          setError('Sai mật khẩu hoặc email rồi bạn ơi!');
         } else {
           localStorage.setItem('nexus_user', JSON.stringify(data));
           onLogin(data);
@@ -60,11 +60,11 @@ export default function Auth({ onLogin }: { onLogin: (user: any) => void }) {
       <motion.div 
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
-        className="w-full max-w-md bg-white p-10 rounded-[45px] shadow-2xl border-4 border-violet-100"
+        className="w-full max-w-md bg-white p-10 rounded-[45px] shadow-2xl border-4 border-violet-50"
       >
         <div className="flex flex-col items-center mb-10">
-          {/* 1. LOGO ĐÃ BO GÓC MƯỢT MÀ (rounded-3xl) */}
-          <div className="w-28 h-28 mb-6 rounded-3xl overflow-hidden shadow-2xl border-4 border-violet-50">
+          {/* 1. LOGO ĐÃ BO VIỀN (rounded-2xl) */}
+          <div className="w-24 h-24 mb-6 rounded-2xl overflow-hidden shadow-xl border-4 border-violet-100">
             <img 
               src="/Images/Gemini_Generated_Image_lmzhbclmzhbclmzh.png" 
               alt="FocusAI Logo" 
@@ -72,11 +72,10 @@ export default function Auth({ onLogin }: { onLogin: (user: any) => void }) {
             />
           </div>
           
-          {/* 2. CHỮ NEXUS ĐÃ NỔI BẬT, MÀU TÍM ĐẬM SIÊU RÕ */}
-          <h1 className="text-5xl font-black text-violet-700 tracking-tight mb-2 drop-shadow-sm">NEXUS</h1>
+          {/* ĐÃ BỎ CHỮ NEXUS THEO Ý BẠN */}
           
-          {/* CHỮ HẾT MỜ (Xóa sạch opacity) */}
-          <p className="text-violet-600 font-black text-xl">
+          {/* 2. CHỮ ĐẬM LÊN (font-black) */}
+          <p className="text-violet-600 font-black text-2xl text-center">
             {isLogin ? 'Chào mừng Học giả quay lại' : 'Bắt đầu hành trình tập trung'}
           </p>
         </div>
@@ -121,7 +120,7 @@ export default function Auth({ onLogin }: { onLogin: (user: any) => void }) {
           </div>
 
           {error && (
-            <div className="bg-red-100 border-2 border-red-500 p-4 rounded-xl">
+            <div className="bg-red-50 border-2 border-red-500 p-4 rounded-xl">
               <p className="text-red-700 text-sm font-black text-center">{error}</p>
             </div>
           )}
@@ -129,7 +128,7 @@ export default function Auth({ onLogin }: { onLogin: (user: any) => void }) {
           <button 
             type="submit" 
             disabled={loading}
-            className="w-full bg-violet-600 hover:bg-violet-800 text-white font-black text-xl py-5 rounded-2xl transition-all flex items-center justify-center gap-3 shadow-2xl shadow-violet-300 active:scale-95 disabled:opacity-50"
+            className="w-full bg-violet-600 hover:bg-violet-800 text-white font-black text-xl py-5 rounded-2xl transition-all flex items-center justify-center gap-3 shadow-2xl shadow-violet-200 active:scale-95 disabled:opacity-50"
           >
             {loading ? 'Đang xử lý...' : (isLogin ? 'Đăng nhập ngay' : 'Tạo tài khoản')}
             <ArrowRight size={24} strokeWidth={4} />
@@ -139,7 +138,8 @@ export default function Auth({ onLogin }: { onLogin: (user: any) => void }) {
         <div className="mt-12 text-center">
           <button 
             onClick={() => setIsLogin(!isLogin)}
-            className="text-violet-500 hover:text-violet-900 text-base font-black transition-all uppercase tracking-widest border-b-4 border-violet-50 hover:border-violet-900 pb-1"
+            /* 3. ĐÃ BỎ GẠCH CHÂN (Remove underline/border-b) */
+            className="text-violet-400 hover:text-violet-900 text-base font-black transition-all uppercase tracking-widest"
           >
             {isLogin ? "Chưa có tài khoản? Đăng ký" : "Đã có tài khoản? Đăng nhập"}
           </button>
