@@ -1,8 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence } from 'motion/react';
 import { Send, Bot, User, Sparkles, BookOpen, GraduationCap, Image as ImageIcon, X, Zap } from 'lucide-react';
 import Markdown from 'react-markdown';
-// Dùng hàm Stream để nhả chữ nhanh
 import { getTutorStream } from '../services/geminiService';
 
 interface Message {
@@ -18,8 +17,7 @@ export default function Tutor({ user }: { user: any }) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // LOGIC TRÍCH XUẤT TÊN CỦA LINH ĐÂY RỒI NHÉ!
-  const firstName = user?.name ? user.name.split(' ').pop() : 'bạn';
+  const firstName = user?.name ? user.name.split(' ').pop() : 'Linh';
 
   useEffect(() => {
     if (scrollRef.current) scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
@@ -36,32 +34,34 @@ export default function Tutor({ user }: { user: any }) {
 
   const handleSend = async () => {
     if ((!input.trim() && !imageBase64) || loading) return;
-    
+
     const userMessage: Message = { role: 'user', parts: [{ text: input || "Phân tích ảnh này giúp mình." }] };
-    const aiPlaceholder: Message = { role: 'model', parts: [{ text: '' }] }; 
+    const aiPlaceholder: Message = { role: 'model', parts: [{ text: '' }] };
     
     setMessages(prev => [...prev, userMessage, aiPlaceholder]);
     
     const currentInput = input;
     const currentImage = imageBase64?.split(',')[1];
-    const history = messages; 
-    
-    setInput(''); setImageBase64(null); setLoading(true);
-    
+    const history = messages;
+
+    setInput(''); 
+    setImageBase64(null); 
+    setLoading(true);
+
     try {
       await getTutorStream(currentInput, history, currentImage, (chunk) => {
         setMessages(prev => {
           const newMessages = [...prev];
           const lastMsg = newMessages[newMessages.length - 1];
           if (lastMsg.role === 'model') {
-            lastMsg.parts[0].text += chunk; 
+            lastMsg.parts[0].text += chunk;
           }
           return newMessages;
         });
-        setLoading(false); 
+        setLoading(false);
       });
-    } catch (error) { 
-      console.error(error); 
+    } catch (error) {
+      console.error(error);
       setMessages(prev => {
         const newMessages = [...prev];
         const lastMsg = newMessages[newMessages.length - 1];
@@ -70,8 +70,8 @@ export default function Tutor({ user }: { user: any }) {
         }
         return newMessages;
       });
-    } finally { 
-      setLoading(false); 
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -125,4 +125,42 @@ export default function Tutor({ user }: { user: any }) {
               </div>
             </motion.div>
           ))}
-          {loading && <div className="flex gap-5 animate-pulse"><div className="w-12 h-12 rounded-2xl bg-violet-100" /><div className="bg-violet-50 p-6 rounded-[35px] rounded-tl-none border-2 border-violet-100 flex gap-2"><div className="w-2 h-2 bg-violet-400 rounded-full animate-bounce"/><div className="w-2 h-2 bg-violet-400 rounded-full
+          {loading && (
+            <div className="flex gap-5 animate-pulse">
+              <div className="w-12 h-12 rounded-2xl bg-violet-100" />
+              <div className="bg-violet-50 p-6 rounded-[35px] rounded-tl-none border-2 border-violet-100 flex gap-2">
+                <div className="w-2 h-2 bg-violet-400 rounded-full animate-bounce"/>
+                <div className="w-2 h-2 bg-violet-400 rounded-full animate-bounce [animation-delay:0.2s]"/>
+                <div className="w-2 h-2 bg-violet-400 rounded-full animate-bounce [animation-delay:0.4s]"/>
+              </div>
+            </div>
+          )}
+        </div>
+
+        <div className="p-8 bg-white border-t border-violet-100 backdrop-blur-md">
+          {imageBase64 && (
+            <div className="mb-4 relative inline-block">
+              <img src={imageBase64} className="h-24 w-24 object-cover rounded-2xl border-4 border-violet-200" />
+              <button onClick={() => setImageBase64(null)} className="absolute -top-3 -right-3 bg-red-500 text-white rounded-full p-2 shadow-xl hover:scale-110 transition-all"><X size={16} /></button>
+            </div>
+          )}
+          <div className="relative flex items-center gap-3 bg-violet-50 p-2 rounded-[30px] border-2 border-violet-100 focus-within:border-violet-400 transition-all shadow-inner">
+            <input type="file" ref={fileInputRef} onChange={handleFileChange} accept="image/*" className="hidden" />
+            <button onClick={() => fileInputRef.current?.click()} className="p-4 text-violet-400 hover:text-violet-600 hover:bg-white rounded-2xl transition-all shadow-sm"><ImageIcon size={28} /></button>
+            <textarea 
+              rows={1} 
+              value={input} 
+              onChange={(e) => setInput(e.target.value)} 
+              onKeyDown={(e) => e.key === 'Enter' && !e.shiftKey && (e.preventDefault(), handleSend())} 
+              placeholder={`Hỏi ${firstName} về bài tập nhé...`} 
+              className="flex-1 bg-transparent py-4 pl-4 pr-16 font-black text-lg outline-none resize-none placeholder:text-violet-300" 
+            />
+            <button onClick={handleSend} disabled={loading || (!input.trim() && !imageBase64)} className="absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 bg-violet-600 hover:bg-violet-700 disabled:opacity-50 rounded-2xl flex items-center justify-center transition-all shadow-xl active:scale-95">
+              <Send size={24} className="text-white" />
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
