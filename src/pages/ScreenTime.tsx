@@ -9,6 +9,9 @@ function cn(...inputs: any[]) {
 export default function ScreenTime({ user }: { user: any }) {
   const [stats, setStats] = useState<any>({ logs: [] });
 
+  // TRÍCH XUẤT TÊN CUỐI CÙNG (Ví dụ: "Kim Minh Đức" -> "Đức")
+  const firstName = user.name ? user.name.split(' ').pop() : 'bạn';
+
   useEffect(() => {
     const fetchStats = async () => {
       try {
@@ -20,7 +23,6 @@ export default function ScreenTime({ user }: { user: any }) {
     fetchStats();
   }, [user.id]);
 
-  // LINK LOGO MỚI CỰC KỲ ỔN ĐỊNH
   const apps = [
     { 
       name: 'Facebook', 
@@ -57,7 +59,8 @@ export default function ScreenTime({ user }: { user: any }) {
             <Clock className="text-primary" size={36} />
             Thời gian sử dụng
           </h1>
-          <p className="text-text-muted font-black mt-1">Theo dõi và tối ưu hóa thói quen của Linh ✨</p>
+          {/* ĐÃ SỬA: Tên động ở đây */}
+          <p className="text-text-muted font-black mt-1">Theo dõi và tối ưu hóa thói quen của {firstName} ✨</p>
         </div>
         <div className="glass px-6 py-4 rounded-3xl flex items-center gap-3 border-primary/20 bg-primary/5 shadow-xl">
           <TrendingDown className="text-emerald-500" size={28} />
@@ -74,7 +77,8 @@ export default function ScreenTime({ user }: { user: any }) {
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 relative z-10">
             <div>
               <h2 className="text-2xl font-black text-text-main tracking-tight">Tổng quan tuần này</h2>
-              <p className="text-sm text-text-muted font-black mt-1">Phân tích chi tiết thời gian Linh dùng thiết bị</p>
+              {/* ĐÃ SỬA: Tên động ở đây */}
+              <p className="text-sm text-text-muted font-black mt-1">Phân tích chi tiết thời gian {firstName} dùng thiết bị</p>
             </div>
             <select className="bg-primary/5 border-2 border-primary/10 rounded-2xl px-6 py-2.5 text-sm font-black text-primary outline-none hover:bg-primary/10 transition-all cursor-pointer shadow-sm">
               <option>7 ngày qua</option>
@@ -133,7 +137,7 @@ export default function ScreenTime({ user }: { user: any }) {
           </div>
         </div>
 
-        {/* Ứng dụng tiêu tốn - PHẦN LOGO ĐÃ SỬA */}
+        {/* Ứng dụng tiêu tốn */}
         <div className="glass p-8 rounded-[40px] space-y-8 bg-white border-primary/10 shadow-2xl">
           <h2 className="text-2xl font-black text-text-main tracking-tight">Ứng dụng tiêu tốn</h2>
           <div className="space-y-5">
@@ -166,9 +170,11 @@ export default function ScreenTime({ user }: { user: any }) {
             <AlertTriangle className="text-yellow-700" size={32} />
           </div>
           <div>
-            <h3 className="text-xl font-black text-text-main mb-2">Gợi ý từ FocusAI cho Linh ✨</h3>
+            {/* ĐÃ SỬA: Tên động ở tiêu đề gợi ý */}
+            <h3 className="text-xl font-black text-text-main mb-2">Gợi ý từ FocusAI cho {firstName} ✨</h3>
             <p className="text-text-muted font-black text-lg leading-relaxed">
-              Bạn đang dành quá nhiều thời gian cho <span className="text-black underline decoration-yellow-500 decoration-4">TikTok</span> vào buổi tối. 
+              {/* ĐÃ SỬA: Tên động ở nội dung lời nhắn */}
+              {firstName} ơi, bạn đang dành quá nhiều thời gian cho <span className="text-black underline decoration-yellow-500 decoration-4">TikTok</span> vào buổi tối. 
               Hãy thử đặt giới hạn 30 phút cho ứng dụng này sau 9 giờ tối để có giấc ngủ ngon hơn nhé!
             </p>
           </div>
