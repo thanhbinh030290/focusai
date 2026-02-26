@@ -108,7 +108,7 @@ function Sidebar({ onLogout, user }: { onLogout: () => void, user: any }) {
       <div className="flex items-center gap-3 mb-10 px-2">
         <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center primary-glow overflow-hidden">
           <img 
-            src="Images/Gemini_Generated_Image_lmzhbclmzhbclmzh.png" 
+            src="/Images/Gemini_Generated_Image_lmzhbclmzhbclmzh.png" 
             alt="FocusAI Logo"
             className="w-full h-full object-cover"
             referrerPolicy="no-referrer"
