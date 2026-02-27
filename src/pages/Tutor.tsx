@@ -139,35 +139,42 @@ export default function Tutor({ user }: { user: any }) {
             </div>
           )}
           <div className="relative flex items-center gap-3 bg-bg-main p-2 rounded-[30px] border-2 border-border-subtle focus-within:border-primary transition-all shadow-inner">
-            <input 
-              type="file" 
-              ref={fileInputRef} 
-              onChange={handleFileChange} 
-              accept="image/*" 
-              className="hidden" 
-            />
-            <button 
-              onClick={() => fileInputRef.current?.click()}
-              className="p-4 text-text-muted hover:text-primary hover:bg-white rounded-2xl transition-all shadow-sm"
-            >
-              <ImageIcon size={28} />
-            </button>
-            <textarea 
-              rows={1}
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              onKeyDown={(e) => e.key === 'Enter' && !e.shiftKey && (e.preventDefault(), handleSend())}
-              placeholder={`Hỏi mình về bài tập nhé...`}
-              className="flex-1 bg-transparent py-4 pl-4 pr-16 font-black text-lg outline-none resize-none"
-            />
-            <button 
-              onClick={handleSend}
-              disabled={loading || (!input.trim() && !imageBase64)}
-              className="absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 bg-primary hover:bg-primary-dark disabled:opacity-50 rounded-2xl flex items-center justify-center transition-all shadow-xl active:scale-95"
-            >
-              <Send size={24} className="text-white" />
-            </button>
-          </div>
+    {/* Input file - ẩn đi */}
+    <input 
+        type="file" 
+        ref={fileNameRef} 
+        onChange={handleFileChange} 
+        accept="image/*" 
+        className="hidden" 
+    />
+    
+    {/* Nút chọn file */}
+    <button 
+        onClick={() => fileNameRef.current?.click()}
+        className="p-2 hover:bg-border-subtle rounded-full transition"
+    >
+        📷
+    </button>
+    
+    {/* THÊM MỚI: Input để nhập tin nhắn */}
+    <input
+        type="text"
+        value={input}
+        onChange={(e) => setInput(e.target.value)}
+        onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
+        placeholder="Nhập câu hỏi của bạn..."
+        className="flex-1 bg-transparent outline-none text-foreground px-2"
+    />
+    
+    {/* THÊM MỚI: Nút gửi */}
+    <button
+        onClick={handleSendMessage}
+        disabled={loading}
+        className="p-2 bg-primary text-white rounded-full hover:opacity-80 transition disabled:opacity-50"
+    >
+        Gửi
+    </button>
+</div>
         </div>
       </div>
     </div>
