@@ -194,7 +194,7 @@ export default function Profile({ user, setUser }: { user: any, setUser: (user: 
       
       {/* HEADER GIAO DIỆN MỚI SIÊU CHẤT */}
       <div className="bg-white rounded-[40px] shadow-2xl overflow-hidden border-4 border-violet-50">
-        <div className="h-56 md:h-72 bg-gradient-to-r from-violet-600 via-purple-600 to-fuchsia-600 relative overflow-hidden group">
+      <div className="h-56 md:h-72 bg-gradient-to-r from-[#B57EDD] via-[#C77DFF] to-[#9D4EDD] relative overflow-hidden group">
           <img 
             src="https://picsum.photos/seed/cover/1200/400" 
             className="w-full h-full object-cover opacity-60 mix-blend-overlay group-hover:scale-105 transition-transform duration-700"
