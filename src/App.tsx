@@ -86,14 +86,16 @@ function Sidebar({ onLogout, user }: { onLogout: () => void, user: any }) {
   const location = useLocation();
   
  
-  
-  const navItems = [
-  { icon: ShoppingBag, label: 'Health Guard', path: '/shop' },              // Health Guard (số 1)
-  { icon: BookOpen, label: 'Gamification', path: '/quiz' },                 // Gamification (số 2)
-  { icon: MessageSquare, label: 'AI Tutor', path: '/tutor' },               // AI Tutor (số 3)
-  { icon: Clock, label: 'Screen Time', path: '/screentime' },               // Screen Time (số 4)
-  { icon: Trophy, label: 'Achievement', path: '/achievements' },            // Achievement (số 5)
-  { icon: User, label: 'Parental Dashboard', path: '/parental' },           // Parental Dashboard (số 6)
+const navItems = [
+  { icon: LayoutDashboard, label: 'Dashboard', path: '/' },
+  { icon: Clock, label: 'Screen Time', path: '/screentime' },
+  { icon: MessageSquare, label: 'AI Tutor', path: '/tutor' },
+  { icon: BookOpen, label: 'Quizzes', path: '/quiz' },
+  { icon: ShoppingBag, label: 'FocusAI Shop', path: '/shop' },
+  { icon: Trophy, label: 'Achievements', path: '/achievements' },
+  { icon: UserCircle, label: 'Profile', path: '/profile' },
+  { icon: User, label: 'Parental View', path: '/parental' }
+];
 
 
   return (
