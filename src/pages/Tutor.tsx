@@ -157,7 +157,7 @@ export default function Tutor({ user }: { user: any }) {
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={(e) => e.key === 'Enter' && !e.shiftKey && (e.preventDefault(), handleSend())}
-              placeholder={`Hỏi ${firstName} về bài tập nhé...`}
+              placeholder={`Hỏi mình về bài tập nhé...`}
               className="flex-1 bg-transparent py-4 pl-4 pr-16 font-black text-lg outline-none resize-none"
             />
             <button 
