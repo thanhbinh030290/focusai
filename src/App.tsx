@@ -87,14 +87,12 @@ function Sidebar({ onLogout, user }: { onLogout: () => void, user: any }) {
   
  
 const navItems = [
-  { icon: LayoutDashboard, label: 'Dashboard', path: '/' },
-  { icon: Clock, label: 'Screen Time', path: '/screentime' },
+  { icon: ShoppingBag, label: 'Health Guard', path: '/shop' },
+  { icon: BookOpen, label: 'Gamification', path: '/quiz' },
   { icon: MessageSquare, label: 'AI Tutor', path: '/tutor' },
-  { icon: BookOpen, label: 'Quizzes', path: '/quiz' },
-  { icon: ShoppingBag, label: 'FocusAI Shop', path: '/shop' },
-  { icon: Trophy, label: 'Achievements', path: '/achievements' },
-  { icon: UserCircle, label: 'Profile', path: '/profile' },
-  { icon: User, label: 'Parental View', path: '/parental' }
+  { icon: Clock, label: 'Screen Time', path: '/screenTime' },
+  { icon: Trophy, label: 'Achievement', path: '/achievements' },
+  { icon: User, label: 'Parental Dashboard', path: '/parental' }
 ];
 
 
