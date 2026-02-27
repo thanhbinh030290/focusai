@@ -92,6 +92,7 @@ const navItems = [
   { icon: MessageSquare, label: 'AI Tutor', path: '/tutor' },
   { icon: Clock, label: 'Screen Time', path: '/screenTime' },
   { icon: Trophy, label: 'Achievement', path: '/achievements' },
+   { icon: ShoppingBag, label: 'FocusAI Shop', path: '/shop' },
   { icon: User, label: 'Parental Dashboard', path: '/parental' },
    { icon: UserCircle, label: 'Profile', path: '/profile' } 
 ];
