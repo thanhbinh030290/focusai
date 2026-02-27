@@ -87,7 +87,7 @@ function Sidebar({ onLogout, user }: { onLogout: () => void, user: any }) {
   
  
 const navItems = [
-  { icon: ShoppingBag, label: 'Health Guard', path: '/shop' },
+  { icon: ShoppingBag, label: 'Health Guard', path: '/' },
   { icon: BookOpen, label: 'Gamification', path: '/quiz' },
   { icon: MessageSquare, label: 'AI Tutor', path: '/tutor' },
   { icon: Clock, label: 'Screen Time', path: '/screenTime' },
